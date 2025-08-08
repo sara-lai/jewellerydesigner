@@ -1,5 +1,7 @@
 // from clerk dashboard post sign-in
 
+// todo - per GPT use middleware to handle redirects depending on stage of onboarding (avoid page flashes)
+
 import { clerkMiddleware } from '@clerk/nextjs/server';
 
 export default clerkMiddleware();

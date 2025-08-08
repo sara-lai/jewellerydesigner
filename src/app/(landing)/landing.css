@@ -9,9 +9,6 @@
 .cl-header, .cl-headerTitle, .cl-headerSubtitle, .cl-verification-section, .cl-footer, .cl-formFieldLabelRow {
   display: none !important;
 }
-.cl-passwordField {
-  display: none !important;
-}
 .cl-form {
   display: flex;
   gap: 8px;
@@ -25,11 +22,25 @@
     gap: 10px;
 }
 input.cl-emailField__input, input.cl-formFieldInput {
-  padding: 22px 10px 22px 10px;
+  padding: 22px 10px 22px 16px;
   border: 1px solid #d1d5db;
   border-radius: 6px;
   font-size: 14px;
   width: 300px;
+  transition: border 0.3s ease;
+}
+ input.cl-formFieldInput:focus {
+  box-shadow: none !important;
+  outline: none;
+  border: 3px solid transparent;
+  border-radius: 6px !important;
+  border-image: linear-gradient(60deg, rgb(247, 149, 51), rgb(243, 112, 85), rgb(239, 78, 123), rgb(161, 102, 171), rgb(80, 115, 184), rgb(16, 152, 173), rgb(7, 179, 155), rgb(111, 186, 130)) 10;
+  border-image-slice: 15;
+  background-clip: padding-box;
+}
+input.cl-formFieldInput__emailAddress::placeholder {
+  color: #6b7280;
+  font-size: 14px;
 }
 .cl-button__google {
     height: 44px;
