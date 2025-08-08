@@ -1,0 +1,60 @@
+
+
+
+
+
+
+
+/** testing clerk css overrides, GPT guidance **/
+.cl-header, .cl-headerTitle, .cl-headerSubtitle, .cl-verification-section, .cl-footer, .cl-formFieldLabelRow {
+  display: none !important;
+}
+.cl-passwordField {
+  display: none !important;
+}
+.cl-form {
+  display: flex;
+  gap: 8px;
+  max-width: 360px;
+  margin: 0 auto;
+  border-radius: 8px;
+  box-shadow: none;
+  background: white;
+}
+.cl-main {
+    gap: 10px;
+}
+input.cl-emailField__input, input.cl-formFieldInput {
+  padding: 22px 10px 22px 10px;
+  border: 1px solid #d1d5db;
+  border-radius: 6px;
+  font-size: 14px;
+  width: 300px;
+}
+.cl-button__google {
+    height: 44px;
+}
+.cl-formButtonPrimary {
+  padding: 8px 16px;
+  background-image: linear-gradient(60deg, rgb(247, 149, 51), rgb(243, 112, 85), rgb(239, 78, 123), rgb(161, 102, 171), rgb(80, 115, 184), rgb(16, 152, 173), rgb(7, 179, 155), rgb(111, 186, 130));
+  color: white;
+  border: none;
+  border-radius: 6px;
+  font-size: 14px;
+  cursor: pointer;
+  transition: background-position 0.5s;
+  background-size: 200% 100%;
+  box-shadow: none !important;
+  height: 44px;
+}
+.cl-formButtonPrimary:hover {
+  background-position: 100% 0;
+}
+.cl-card {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: #f9fafb;
+  border: none !important;
+  box-shadow: none !important;
+}
