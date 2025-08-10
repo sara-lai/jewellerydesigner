@@ -1,4 +1,5 @@
 // UI mostly created via https://v0.dev/
+
 'use client'
 
 import { useRouter } from 'next/navigation'
@@ -12,6 +13,7 @@ export default function Component() {
   const { userId } = useAuth()
 
   // should this be in .env for test/demo env vs live?
+  // can add more fields for the plan type (update after webhook)?
   const stripeLink = 'https://buy.stripe.com/test_14A28qgZEckW89c8CT9k401?client_reference_id=' + userId
 
   const plans = [

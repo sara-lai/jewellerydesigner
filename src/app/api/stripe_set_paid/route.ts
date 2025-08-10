@@ -13,6 +13,8 @@ import Stripe from 'stripe'
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY)
 const webhookSecret = process.env.STRIPE_WEBHOOK_SECRET
 
+import prisma from '@/lib/prisma'
+
 export async function POST(req: Request) {
 
     // stripe webook instructions
@@ -31,8 +33,17 @@ export async function POST(req: Request) {
         console.log('hurray!! we have made it here in the stripe test!!')
         const session = event.data.object as Stripe.Checkout.Session
         const userId = session.client_reference_id // the Clerk userId set on initial payment links
-        console.log('got the Clerk userId', userId)
-        // do something with the database!
+
+        // todo move to a service/controller style file?
+        // todo how can i detect the specific plan ? 
+        const updatedUser = await prisma.user.update({
+            where: { clerk_id: userId,},        
+            data: { hasPlan: true }
+        })            
+        console.log('updated User:', updatedUser)  
+
+    } else {
+        console.log('other message from stripe, ignore')
     }
 
     return NextResponse.json({ received: true }, { status: 200 })

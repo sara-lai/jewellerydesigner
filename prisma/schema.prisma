@@ -1,8 +1,4 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
-// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
-// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+// prisma cheat sheet: https://github.com/emanuelefavero/prisma
 
 generator client {
   provider = "prisma-client-js"
@@ -11,6 +7,18 @@ generator client {
 datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
+}
+
+// prisma formatting todo (or it my weird editor font?
+// maybe move into models/user, express-like, and import into here?
+model User {
+  id            Int      @id @default(autoincrement())
+  clerk_id      String   @unique
+  hasPlan       Boolean  @default(false)
+  plan          String? // allow null
+  hasFirstModel Boolean  @default(false)
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
 }
 
 // import * from "./../src/models/user.prisma" (alternate approach to use /models)
