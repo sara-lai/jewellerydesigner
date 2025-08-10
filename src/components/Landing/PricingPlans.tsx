@@ -1,31 +1,26 @@
-// partially made from https://v0.dev/
+// UI mostly created via https://v0.dev/
 'use client'
 
-import {
-  Box,
-  Button,
-  Heading,
-  Text,
-  VStack,
-  HStack,
-  SimpleGrid,
-  Container,
-  Flex,
-  Switch,
-  Field
-} from '@chakra-ui/react'
+import { useRouter } from 'next/navigation'
+import {  Box,  Button,  Heading,  Text,  VStack,  HStack,  SimpleGrid,  Container,  Flex,  Switch,  Field,} from '@chakra-ui/react'
 import { useState } from 'react'
+import { useAuth } from '@clerk/nextjs'
 
 export default function Component() {
   const [isAnnual, setIsAnnual] = useState(false)
+  const router = useRouter()
+  const { userId } = useAuth()
+
+  // should this be in .env for test/demo env vs live?
+  const stripeLink = 'https://buy.stripe.com/test_14A28qgZEckW89c8CT9k401?client_reference_id=' + userId
 
   const plans = [
     {
       name: "Hobbyist",
-      monthlyPrice: 22,
-      annualPrice: 249,
+      monthlyPrice: 19,
+      annualPrice: 179,
       period: isAnnual ? "/year" : "/month",
-      description: "Perfect for new jewelry designers getting started",
+      description: "Perfect for new jewelry designers and the curious",
       features: [
         "Up to 5 custom designs per month",
         "Basic material consultation",
@@ -57,11 +52,11 @@ export default function Component() {
       popular: true
     },
     {
-      name: "Established Brands",
+      name: "Maison+",
       monthlyPrice: 299,
-      annualPrice: 7992, // 33% discount
+      annualPrice: 2750, // 33% discount
       period: isAnnual ? "/year" : "/month",
-      description: "For high-volume designers and jewelry businesses",
+      description: "For larger volume brands with design teams",
       features: [
         "Unlimited custom designs",
         "Exclusive material sourcing",
@@ -262,6 +257,7 @@ export default function Component() {
                 {/* Card Footer */}
                 <Box p={8} pt={4}>
                   <Button
+                    onClick={() => router.push(stripeLink)}
                     w="full"
                     py={6}
                     fontSize="md"
