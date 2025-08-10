@@ -10,15 +10,15 @@
 import { NextResponse } from 'next/server' // use NextResponse not typical 'res' for Next api routes
 
 import Stripe from 'stripe'
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY)
-const webhookSecret = process.env.STRIPE_WEBHOOK_SECRET
+const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!)
+const webhookSecret = process.env.STRIPE_WEBHOOK_SECRET!
 
-import prisma from '@/lib/prisma'
+import * as userService from '@/services/userService'
 
 export async function POST(req: Request) {
 
     // stripe webook instructions
-    const signature = req.headers.get('stripe-signature')
+    const signature = req.headers.get('stripe-signature')!
     const buf = await req.arrayBuffer()
     let event: Stripe.Event;
 
@@ -32,14 +32,11 @@ export async function POST(req: Request) {
     if (event.type === 'checkout.session.completed') { // payment_intent.succeeded is another option
         console.log('hurray!! we have made it here in the stripe test!!')
         const session = event.data.object as Stripe.Checkout.Session
-        const userId = session.client_reference_id // the Clerk userId set on initial payment links
-
-        // todo move to a service/controller style file?
-        // todo how can i detect the specific plan ? 
-        const updatedUser = await prisma.user.update({
-            where: { clerk_id: userId,},        
-            data: { hasPlan: true }
-        })            
+        const userId = session.client_reference_id! // the Clerk userId set on initial payment links
+        // todo retrieve a plan too
+        const plan = 'default'
+        
+        const updatedUser = await userService.updatePlan(userId, plan)         
         console.log('updated User:', updatedUser)  
 
     } else {
