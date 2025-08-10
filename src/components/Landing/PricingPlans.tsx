@@ -21,9 +21,9 @@ export default function Component() {
 
   const plans = [
     {
-      name: "Starter",
-      monthlyPrice: 299,
-      annualPrice: 2390, // 20% discount
+      name: "Hobbyist",
+      monthlyPrice: 22,
+      annualPrice: 249,
       period: isAnnual ? "/year" : "/month",
       description: "Perfect for new jewelry designers getting started",
       features: [
@@ -38,9 +38,9 @@ export default function Component() {
       popular: false
     },
     {
-      name: "Professional",
-      monthlyPrice: 599,
-      annualPrice: 4792, // 33% discount
+      name: "Pro",
+      monthlyPrice: 59,
+      annualPrice: 499, // 33% discount
       period: isAnnual ? "/year" : "/month",
       description: "Ideal for established designers with growing clientele",
       features: [
@@ -57,8 +57,8 @@ export default function Component() {
       popular: true
     },
     {
-      name: "Enterprise",
-      monthlyPrice: 999,
+      name: "Established Brands",
+      monthlyPrice: 299,
       annualPrice: 7992, // 33% discount
       period: isAnnual ? "/year" : "/month",
       description: "For high-volume designers and jewelry businesses",
@@ -93,7 +93,7 @@ export default function Component() {
   }
 
   return (
-    <Box minH="100vh" bg="white" py={12} px={4}>
+    <Flex justify='center' minH="100vh" bg="white" py={12} px={4}>
       <Container maxW="7xl">
         {/* Header */}
         <VStack gap={6} textAlign="center" mb={16}>
@@ -300,6 +300,6 @@ export default function Component() {
           </Button>
         </VStack>
       </Container>
-    </Box>
+    </Flex>
   )
 }

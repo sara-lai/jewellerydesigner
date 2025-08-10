@@ -1,10 +1,18 @@
-// from clerk dashboard post sign-in
+// made from clerk dashboard post sign-in and https://clerk.com/docs/references/nextjs/clerk-middleware
 
 // todo - per GPT use middleware to handle redirects depending on stage of onboarding (avoid page flashes)
+// ideal: if account but !paid, go to plans ; if account && paid, go to first-model ; if account && paid && first model, go to dashboard
 
-import { clerkMiddleware } from '@clerk/nextjs/server';
+import { clerkMiddleware, createRouteMatcher } from '@clerk/nextjs/server';
 
-export default clerkMiddleware();
+const isProtectedRoute = createRouteMatcher([
+  '/dashboard(.*)', 
+  '/onboarding(.*)'
+])
+
+export default clerkMiddleware(async (auth, req) => {
+  if (isProtectedRoute(req)) await auth.protect()
+})
 
 export const config = {
   matcher: [
