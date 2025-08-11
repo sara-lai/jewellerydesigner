@@ -28,8 +28,18 @@ const updatePlan = async (clerk_id: string, plan?: string) => { // until have mu
     return updatedUser 
 } 
 
+// shoudl this be updated after replicate complete?
+const updateFirstModel = async (clerk_id: string) => { // until have multiple plans
+    const updatedUser = await prisma.user.update({
+        where: { clerk_id: clerk_id,},
+        data: { hasFirstModel: true}, 
+    })
+    return updatedUser 
+} 
+
 export {
     currentUser,
     createUser,
-    updatePlan
+    updatePlan,
+    updateFirstModel
 }

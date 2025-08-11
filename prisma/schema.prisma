@@ -21,4 +21,13 @@ model User {
   updatedAt     DateTime @updatedAt
 }
 
+// todo explore best way to "link" model to user
+model MLModel {
+  id        Int      @id @default(autoincrement())
+  user_id   String   @unique // clerk user_id
+  nickname     String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
 // import * from "./../src/models/user.prisma" (alternate approach to use /models)
