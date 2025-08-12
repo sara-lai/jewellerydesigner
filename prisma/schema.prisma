@@ -9,7 +9,6 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-// prisma formatting todo (or it my weird editor font?
 // maybe move into models/user, express-like, and import into here?
 model User {
   id            Int      @id @default(autoincrement())
@@ -23,11 +22,15 @@ model User {
 
 // todo explore best way to "link" model to user
 model MLModel {
-  id        Int      @id @default(autoincrement())
-  user_id   String   @unique // clerk user_id
-  nickname     String?
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  id                Int      @id @default(autoincrement())
+  user_id           String   @unique // clerk user_id
+  nickname          String?
+  optionalPrompt    String?
+  imageUrls         String[]
+  completedTraining Boolean  @default(false)
+  agreedToTerms     Boolean  @default(false)
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
 }
 
 // import * from "./../src/models/user.prisma" (alternate approach to use /models)
