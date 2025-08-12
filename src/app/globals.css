@@ -58,3 +58,15 @@ button.btn-default {
         background-color: #576176;
     }
 }
+input::placeholder, textarea::placeholder {
+    font-weight: 300;
+    color: #232f46; 
+    letter-spacing: .2px;
+}
+input, textarea {
+  padding: 10px;
+}
+.chakra-input:focus, input:focus {
+    border: 2px solid black !important;
+    box-shadow: none !important;
+}

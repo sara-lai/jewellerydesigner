@@ -38,10 +38,13 @@ export default function RootLayout({
       signUpFallbackRedirectUrl={process.env.NEXT_PUBLIC_CLERK_SIGN_UP_FALLBACK_REDIRECT_URL}
     >
       <html suppressHydrationWarning>
+        <head>
+          <script src="https://widget.cloudinary.com/v2.0/global/all.js" type="text/javascript" async />
+        </head>
         <body className={`${inter.variable} ${montserrat.variable}`}>
           <Provider>{children}</Provider>
         </body>
       </html>
     </ClerkProvider>
-  );
+  );  
 }

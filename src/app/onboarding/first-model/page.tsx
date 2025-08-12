@@ -5,17 +5,16 @@
 
 import '../onboarding.css'
 
-import { Box, Button } from '@chakra-ui/react'
+import { Box} from '@chakra-ui/react'
+
+import NewModelForm from '@/components/Models/NewModelForm'
 
 
 const FirstModel = async () => {
 
     return (
         <Box>
-            <form action={createModel}>
-            
-                <Button type='submit'>Submit</Button>
-            </form>
+            <NewModelForm />
         </Box>
     )
 }

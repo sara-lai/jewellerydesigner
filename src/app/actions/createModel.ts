@@ -2,6 +2,7 @@
 
 import * as userService from '@/services/userService'
 import * as modelService from '@/services/modelService'
+import { redirect } from 'next/navigation'
 
 export async function createModel(formData: FormData) { // next will pass in FormData automatically
     const user = await userService.currentUser()
@@ -14,9 +15,7 @@ export async function createModel(formData: FormData) { // next will pass in For
     const data = {}
     const model = await modelService.createModel(data)
     console.log('Created model:', model)     
-    await userService.updateFirstModel(user.clerk_id)   
-
-    // redirect to dashboard
-    // or redirect to a "check email" page
-    // or redirect is put on client component??
+    await userService.updateFirstModel(user.clerk_id)  
+    
+    redirect('/dashboard')
 }
