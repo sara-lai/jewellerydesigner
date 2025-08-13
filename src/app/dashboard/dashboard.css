@@ -4,3 +4,17 @@
     height: 24px;
     width: 24px;
 }
+
+
+/* attempt at scrollable center content with "app style" fixed height */
+.app-wrapper {
+    height: 100vh;
+    overflow: hidden;
+}
+.content-scroll {
+    overflow-y: auto;
+    scrollbar-width: none;
+}   
+.content-scroll::-webkit-scrollbar {
+    display: none;
+}
