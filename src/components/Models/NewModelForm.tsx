@@ -37,7 +37,7 @@ const NewModelForm = () => {
 
     return (
         <Flex justify='center'>
-            <form action={createModel}>
+            <form action={handleSubmit}>
                 <VStack gap={4} align="stretch" maxW='800px'>
                     <Heading size='2xl'>Your First Model</Heading>
 
