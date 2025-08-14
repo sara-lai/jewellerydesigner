@@ -27,9 +27,12 @@ export async function POST(request: Request) {
     // "completed_at": "2025-08-14T12:55:12.123Z",
     // "destination": "my-organization/my-model",
     // "output": "abcdef12-3456-7890-abcd-ef1234567890",
+    // OR --> "output": {"version": "...."}
     // "error": null,
     // "logs": "Training logs here...\n",
     // ....
+
+    // need to make sure model ID is passed into webhook!
 
     // update the MLModel & then run inference for user freebies ??
 

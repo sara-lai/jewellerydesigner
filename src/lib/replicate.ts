@@ -1,32 +1,39 @@
 // https://replicate.com/docs/reference/http
 // https://github.com/replicate/replicate-javascript
+// https://replicate.com/docs/topics/webhooks/testing-webhook-code -> ngrok testing
 import Replicate from "replicate"
+import * as modelService from '@/services/modelService'
 
 
-const trainFirstModel = async () => {
+const trainFirstModel = async (model) => {
     // brainstorm
     // need to prepare user images..... 
     // ^ invovles zip file & storing externally (put zip file on cloudinary?)
     // need to update the MlModel with a replicate link, for when done / or to track progress? 
-    // need a webhook to get some alert when training is done.... ? 
+    // need a webhook to get some alert when training is done.... ? pass the model to webhook so we know which model
     // ^ put webhook url in options 
     // this may be different if user making additional models vs first
     
     const replicate = new Replicate({
         auth: process.env.REPLICATE_API_TOKEN,
     }) 
+
+    // zip here
+    const zip_url = ""
+
+
     // from github doc: const response = await replicate.trainings.create(model_owner, model_name, version_id, options);
     const response = await replicate.trainings.create(
         'ostris', 'flux-dev-lora-trainer', '26dce37a',  // 8 other models to try
         {
-            "destination": "my-organization/my-model",
+            "destination": "sara-lai/test.02",
             "input": {
-                "input_images": "https://example.com/my-input-images.zip",
-                "trigger_word": "SOMETHING123",
+                "input_images": zip_url,
+                "trigger_word": "GUSJWLRY",
                 "lora_type": "subject", // vs style, vs...
                 "training_steps": 1000
             },
-            "webhook": "https://example.com/my-webhook",
+            "webhook": `https://ngrok--todo---todok/api/replicate_new_model?modelId=${model.id}`, // put ngrok here.... put model id as custom param so can retreive
             "webhook_events_filter": ["completed"]
         }
     )
@@ -49,6 +56,18 @@ const trainFirstModel = async () => {
     //         "cancel": "https://api.replicate.com/v1/predictions/zz4ibbonubfz7carwiefibzgga/cancel"
     //     }
     // }
+
+    // need definite error checking here if problem on replicate .... check response.status?
+
+    const updatedModel = modelService.updateModel(model.id, {
+        modelStatus: "TRAINING",
+        trainId: 'todo',
+        destination: 'todo',
+        tword: 'todo',
+        baseModel: 'todo',
+    })   
+    
+    return updatedModel
 
 }
 

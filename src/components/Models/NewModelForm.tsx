@@ -17,21 +17,20 @@ import '@/app/dashboard/dashboard.css' // should this live in app/components?
 
 const NewModelForm = () => {
 
-    const [imageUrls, setImageUrls] = useState([])
+    const [imageUrls, setImageUrls] = useState<string[]>([])
     
     // todo remove images from preview area, have them filter out the imageUrls.... 
 
     const handleSubmit = async (formData: FormData) => {
         try {
-            //formData.set('imageUrls', JSON.stringify(imageUrls)) // for cloudinary
-            await createModel(formData)        
+            await createModel(formData, imageUrls)     
         } catch (err){
             console.log('problem, failed to create the model')
         }
     } 
     
     const handleImageUpload = () => { 
-        uploadWidget((secureUrlsList: []) => {
+        uploadWidget((secureUrlsList: string[]) => {
             console.log(secureUrlsList)
             setImageUrls(secureUrlsList)       
         }, true) //  set true for multi upload -> means secureUrlsList is an array
@@ -93,13 +92,13 @@ const NewModelForm = () => {
                         <Field.Label>
                             Model Name
                         </Field.Label>
-                        <Input name="nickname" placeholder="Enter model name" />
+                        <Input name="name" placeholder="Enter model name" />
                         <Field.HelperText>Any name, for your own reference</Field.HelperText>
                     </Field.Root>
 
                     <Field.Root>
-                        <Field.Label>Style Description Prompt</Field.Label>
-                        <Textarea name="optionalPrompt" placeholder="Enter a prompt (optional)" />
+                        <Field.Label>Style Description Prompt (optional)</Field.Label>
+                        <Textarea name="stylePrompt" placeholder="Enter a prompt (optional)" />
                         <Field.HelperText>If you have the perfect way to describe your jewelry, enter it here as it may help the model during training.</Field.HelperText>
                     </Field.Root> 
 
