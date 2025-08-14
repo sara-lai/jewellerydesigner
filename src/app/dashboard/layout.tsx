@@ -22,7 +22,7 @@ export default async function DashboardLayout({ children,}: { children: React.Re
         </Flex>              
       </Flex>
       <Flex mx="auto" h="100vh">
-        <Box width="320px" p={4} pt={0}>  
+        <Box width="340px" p={4} pt={0}>  
           <Flex className='content-scroll' direction='column' gap={4}>
             <Box>
               Test Side1

@@ -66,7 +66,15 @@ input::placeholder, textarea::placeholder {
 input, textarea {
   padding: 10px;
 }
-.chakra-input:focus, input:focus {
+.chakra-input:focus, input:focus, textarea:focus {
     border: 2px solid black !important;
     box-shadow: none !important;
+}
+
+/* more chakra overrides */
+.chakra-field__label {
+  font-size: 15px;
+}
+.chakra-field__helperText {
+  font-size: 13px;
 }

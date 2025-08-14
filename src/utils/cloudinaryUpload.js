@@ -21,10 +21,19 @@ export const uploadWidget = (onSuccess, multiple=false) => {
         {
             cloudName: process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME,
             uploadPreset: process.env.NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET,
-            sources: ['local'],
+            sources: ['local', 'dropbox', 'google_drive'],
             multiple: multiple,
             resourceType: 'image',
             clientAllowedFormats: ['jpg', 'png', 'jpeg'],
+            maxFiles: 40,
+            showPoweredBy: false,
+            text: {
+                "en": {
+                    "local":{
+                        "dd_title_multi": "Drag and Drop your images here"
+                    }
+                }
+            },
             styles: {
                 palette: {
                     link: "#232f46",
@@ -34,7 +43,8 @@ export const uploadWidget = (onSuccess, multiple=false) => {
                 fonts: {
                 },
                 frame: {
-                    background: '#0000001a' 
+                    background: 'rgba(0, 0, 0, 0.3)',
+                    opacity: .1
                 }                
             }
         },

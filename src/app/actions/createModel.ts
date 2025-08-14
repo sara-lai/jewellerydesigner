@@ -2,6 +2,7 @@
 
 import * as userService from '@/services/userService'
 import * as modelService from '@/services/modelService'
+import * as replicate from '@/lib/replicate'
 import { redirect } from 'next/navigation'
 
 export async function createModel(formData: FormData) { // next will pass in FormData automatically
@@ -16,6 +17,11 @@ export async function createModel(formData: FormData) { // next will pass in For
     const model = await modelService.createModel(data)
     console.log('Created model:', model)     
     await userService.updateFirstModel(user.clerk_id)  
+
+
+    // kick off training here
+    replicate.trainFirstModel()
+
     
     redirect('/dashboard')
 }
