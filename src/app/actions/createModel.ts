@@ -31,8 +31,10 @@ export async function createModel(formData: FormData, imageUrls: string[]) {
     await userService.updateFirstModel(user.clerk_id)  
 
     // train!!
-    const updatedModel = replicate.trainFirstModel(model)
-    console.log('replicate training has kicked off! new model updates', updatedModel)
+    console.log('kicking off training! about to call....')
+    // hmmm should await before direct to dashboard??? probably not
+    replicate.trainFirstModel(model)
+    console.log('replicate training has kicked off! new model updates')
     
     redirect('/dashboard')
 }

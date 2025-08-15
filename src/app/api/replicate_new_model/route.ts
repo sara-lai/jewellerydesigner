@@ -10,11 +10,11 @@ export async function POST(request: Request) {
     // retreive the right model 
     const url = new URL(request.url) // the next way, nice
     const modelId = url.searchParams.get('modelId')
-    console.log('we have retreived the modelId', modelId)
+    console.log('replicate webhook - we have retreived the modelId', modelId)
     if (!modelId) {
         return NextResponse.json({ detail: "Missing modelId" }, { status: 400 });
     }   
-    const model = await modelService.getModelById(modelId) 
+    const model = await modelService.getModelById(Number(modelId)) 
 
     // verify webhook
     const secret = process.env.REPLICATE_WEBHOOK_SIGNING_SECRET!
@@ -22,25 +22,25 @@ export async function POST(request: Request) {
     if (!webhookIsValid) {
         return NextResponse.json({ detail: "Webhook is invalid" }, { status: 401 });
     }
+    console.log('webhook is verified!')
 
-    // example response
-    // {
-    // "id": "ufwxyz12345abcde",
-    // "version": "26dce37a...",
-    // "status": "succeeded",
-    // "created_at": "2025-08-14T12:34:56.789Z",
-    // "completed_at": "2025-08-14T12:55:12.123Z",
-    // "destination": "my-organization/my-model",
-    // "output": "abcdef12-3456-7890-abcd-ef1234567890",
-    // OR --> "output": {"version": "...."}
-    // "error": null,
-    // "logs": "Training logs here...\n",
-    // ....
-
+    // get info from response
     const body = await request.json();
-    console.log(body);
+    console.log('body of webhook', body);
+    if (body.status === 'failed'){
+        console.log('problem from replicate!!!', body.error)
+    }
+    if (body.status ==='succeeded'){
+        const updatedModel = await modelService.updateModel(model.id, {
+            modelStatus: "COMPLETED",
+            modelHostId: body.version
+        })
+        console.log('updated model after webhook!', updatedModel) 
+    } else {
+        console.log('model training unexpected status.... better do something')
+    }
 
-    // update the MLModel & then run inference for user freebies ?? (probably another module)
+    // run inference for user freebies ?? (probably another module)
 
     // send an email to user that model is ready (or update FE via pusher??)
 
