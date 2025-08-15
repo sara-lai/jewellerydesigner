@@ -34,6 +34,7 @@ model MLModel {
   name              String?
   stylePrompt       String?
   imageUrls         String[]
+  sampleUrls        String[]
   trainId           String?
   baseModel         String?
   destination       String?

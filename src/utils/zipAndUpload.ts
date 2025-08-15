@@ -4,6 +4,8 @@ import fs from 'fs'
 import archiver from 'archiver'
 import fetch from 'node-fetch' // for streaming
 
+// todo - problem, cloudinary zip 10MB upload limit!.... need to find another solution
+
 export default async function zipAndUpload(modelId: number, imageUrls: string[]){
     
     cloudinary.config({

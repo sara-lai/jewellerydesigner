@@ -11,13 +11,13 @@ export default async function DashboardLayout({ children,}: { children: React.Re
         </Box>
         <Flex gap={4}>
           <Box>
-            Test Top Link1
+            Credits
           </Box>
           <Box>
-            Test Top Link2
+            Upgrade
           </Box>
           <Box>
-            Test Top Link3
+            Account
           </Box>  
         </Flex>              
       </Flex>
@@ -25,24 +25,24 @@ export default async function DashboardLayout({ children,}: { children: React.Re
         <Box width="340px" p={4} pt={0}>  
           <Flex className='content-scroll' direction='column' gap={4}>
             <Box>
-              Test Side1
+             
             </Box>
             <ModelTree />                      
           </Flex>      
         </Box>
-        <Box flex="1" overflowY="auto" className="content-scroll" mb={20}>  
+        <Box flex="1" overflowY="auto" className="content-scroll" mb={20} pr={2}>  
           <Flex justify='space-between'position="sticky" top={0} zIndex={10} bg='white' pb={4}>
             <Box>
-              Core Functionality 1
+              Your Generated Photos
             </Box>
             <Box>
-              Core Functionality 2
+              Examples & Public Models
             </Box>            
             <Box>
-              Core Functionality 3
+              Favourites
             </Box> 
-            <Box>
-              Core Functionality 4
+            <Box pr={8}>
+              Deleted
             </Box>                                    
           </Flex>
           {/* <Suspense fallback={<DashboardSkeleton />}></Suspense> */} 

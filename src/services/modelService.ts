@@ -22,8 +22,19 @@ const getModelById = async(modelId: number) => {
     return model
 }
 
+const getLatestTrainedModel = async (user_id: string) => {
+    // user id is clerk id....
+    const latestModel = await prisma.mLModel.findFirst({
+        where: { user_id: user_id },
+        orderBy: { createdAt: "desc" }
+    })
+    return latestModel
+}
+
+
 export {
     createModel,
     updateModel,
-    getModelById
+    getModelById,
+    getLatestTrainedModel
 }

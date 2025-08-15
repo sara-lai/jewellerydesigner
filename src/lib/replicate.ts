@@ -5,6 +5,8 @@ import Replicate from "replicate"
 import * as modelService from '@/services/modelService'
 import zipAndUpload from '@/utils/zipAndUpload'
 
+const webhookBase = process.env.REPLICATE_WEBHOOK_BASE
+
 const trainFirstModel = async (model) => {
     // probably different logic for new training vs additional trainings
     // does it matter if pass in model vs model.id??
@@ -27,7 +29,7 @@ const trainFirstModel = async (model) => {
                 "lora_type": "subject", // vs style, vs...
                 "training_steps": 1000
             },
-            "webhook": `https://0522b8d7524f.ngrok-free.app/api/replicate_new_model?modelId=${model.id}`, // put ngrok here.... put model id as custom param so can retreive
+            "webhook": `${webhookBase}/api/replicate_new_model?modelId=${model.id}`, // put ngrok here.... put model id as custom param so can retreive
             "webhook_events_filter": ["completed"]
         }
     )
@@ -45,9 +47,45 @@ const trainFirstModel = async (model) => {
     console.log('updated model', updatedModel)   
     
     return updatedModel
+}
 
+const newModelSamples = async (modelId: number) => {
+    // brainstorm
+    // this could take more than a few minutes..... prob need to send off request and do webhook
+    // seems replicate returns imageUrls, download them or not?
+
+    const replicate = new Replicate({
+        auth: process.env.REPLICATE_API_TOKEN,
+    })
+
+    const model = await modelService.getModelById(modelId)
+    
+
+    // kick off more replicate tasks, get alerted with webhooks
+    // not sure all test models support num_outputs
+    // multiple options? predictions.create ("background") vs. replicate.run (must wait for result)
+    for (let i = 0; i < 10; i++) {
+        await replicate.predictions.create({
+            "version": model.modelHostId,
+            "input": { 
+                "prompt": `Jewelry in style ${model.tword}`,
+                "num_outputs": 2,
+            },
+            "webhook": `${webhookBase}/api/new_model_first_samples?modelId=${modelId}`,
+            "webhook_events_filter": ["completed"]
+        })
+    }
+    // // some models suppport num_outputs, but various maxes.... oh dear
+    // await replicate.predictions.create({
+    //     "num_outputs": 10,
+    //     "version": model.modelHostId,
+    //     "input": { prompt: `Jewelry in style ${model.tword}` },
+    //     "webhook": `${webhookBase}/api/new_model_first_samples?modelId=${modelId}`,
+    //     "webhook_events_filter": ["completed"]
+    // })
 }
 
 export {
-    trainFirstModel
+    trainFirstModel,
+    newModelSamples
 }

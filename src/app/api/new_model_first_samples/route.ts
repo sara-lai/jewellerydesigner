@@ -3,8 +3,6 @@ import { NextResponse } from 'next/server';
 import { validateWebhook } from 'replicate';
 import * as modelService from '@/services/modelService'
 
-import { newModelSamples } from '@/lib/replicate';
-
 // note
 // docs give warning about multiple webhook requests possible
 
@@ -28,26 +26,42 @@ export async function POST(request: Request) {
 
     // get info from response
     const body = await request.json();
-    console.log('body of webhook', body);
+    console.log('body of webhook for sample generation', body);
     if (body.status === 'failed'){
         console.log('problem from replicate!!!', body.error)
     }
+
+
+    // everything above is same for other webhooks.... whats good way to
+
     if (body.status ==='succeeded'){
+
+        // brainstorm
+        // there should be a single imgUrl coming from replicate
+        // need to collect them into model.sampleUrls
+
+        // response.output expect an aray of multi images potentially?
+
+
+        // maybe: get existing sampleUrls.... the combine with new ones from webhook.... then call updateModel
+        const existingUrls = model.sampleUrls
+        let newUrls;
+        if (Array.isArray(body.output)){
+            newUrls = body.output
+        } else {
+            console.log('unexpected, output is what kind of thing?', body.output)
+            newUrls = [body.output]
+        }
+        const combinedUrls = existingUrls.concat(newUrls)      
+
         const updatedModel = await modelService.updateModel(model.id, {
-            modelStatus: "COMPLETED",
-            completedTraining: true,
-            modelHostId: body.version
+            sampleUrls: combinedUrls
         })
         console.log('updated model after webhook!', updatedModel) 
     } else {
-        console.log('model training unexpected status.... better do something')
+        console.log('model img sample generation unexpected status.... better do something')
     }
+    
 
-    // run inference for user freebies ?? (probably another module)
-    newModelSamples(model.id)
-
-
-    // send an email to user that model is ready (or update FE via pusher??)
-
-    return NextResponse.json({ detail: "all good!" }, { status: 200 });
+    return NextResponse.json({ detail: "all good" }, { status: 200 });
 }
