@@ -3,7 +3,7 @@
 // https://replicate.com/docs/topics/webhooks/testing-webhook-code -> ngrok testing
 import Replicate from "replicate"
 import * as modelService from '@/services/modelService'
-
+import zipAndUpload from '@/utils/zipAndUpload'
 
 const trainFirstModel = async (model) => {
     // brainstorm
@@ -18,17 +18,14 @@ const trainFirstModel = async (model) => {
         auth: process.env.REPLICATE_API_TOKEN,
     }) 
 
-    // zip here
-    const zip_url = ""
+    const zipUrl = await zipAndUpload(model.id, model.imageUrls)
 
-
-    // from github doc: const response = await replicate.trainings.create(model_owner, model_name, version_id, options);
     const response = await replicate.trainings.create(
         'ostris', 'flux-dev-lora-trainer', '26dce37a',  // 8 other models to try
         {
             "destination": "sara-lai/test.02",
             "input": {
-                "input_images": zip_url,
+                "input_images": zipUrl,
                 "trigger_word": "GUSJWLRY",
                 "lora_type": "subject", // vs style, vs...
                 "training_steps": 1000
@@ -37,6 +34,7 @@ const trainFirstModel = async (model) => {
             "webhook_events_filter": ["completed"]
         }
     )
+    console.log(response)
 
     //example response of training object
     // {

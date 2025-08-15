@@ -1,19 +1,24 @@
 // https://github.com/replicate/replicate-javascript?tab=readme-ov-file#verifying-webhooks
 import { NextResponse } from 'next/server';
 import { validateWebhook } from 'replicate';
+import * as modelService from '@/services/modelService'
 
-// brainstorm 
-// this webhook means the model has completed..... 
-// it needs to update the MLModel obj
-// it needs to generate some sample images for the user when they visit dashboard
-// it needs to send an email to the user / alert the user somehow / maybe even Pusher ??
+// note
 // docs give warning about multiple webhook requests possible
 
 export async function POST(request: Request) {
+    // retreive the right model 
+    const url = new URL(request.url) // the next way, nice
+    const modelId = url.searchParams.get('modelId')
+    console.log('we have retreived the modelId', modelId)
+    if (!modelId) {
+        return NextResponse.json({ detail: "Missing modelId" }, { status: 400 });
+    }   
+    const model = await modelService.getModelById(modelId) 
+
+    // verify webhook
     const secret = process.env.REPLICATE_WEBHOOK_SIGNING_SECRET!
-
     const webhookIsValid = await validateWebhook(request.clone(), secret);
-
     if (!webhookIsValid) {
         return NextResponse.json({ detail: "Webhook is invalid" }, { status: 401 });
     }
@@ -32,14 +37,12 @@ export async function POST(request: Request) {
     // "logs": "Training logs here...\n",
     // ....
 
-    // need to make sure model ID is passed into webhook!
-
-    // update the MLModel & then run inference for user freebies ??
-
-    // process validated webhook here...
-    console.log("Webhook is valid!");
     const body = await request.json();
     console.log(body);
+
+    // update the MLModel & then run inference for user freebies ?? (probably another module)
+
+    // send an email to user that model is ready (or update FE via pusher??)
 
     return NextResponse.json({ detail: "Webhook is valid" }, { status: 200 });
 }

@@ -26,7 +26,8 @@ export async function createModel(formData: FormData, imageUrls: string[]) {
         imageUrls: imageUrls,
     }
     const model = await modelService.createModel(data)
-    console.log('Created model:', model)     
+    console.log('Created model:', model)   
+      
     await userService.updateFirstModel(user.clerk_id)  
 
     // train!!

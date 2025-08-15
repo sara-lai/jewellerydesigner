@@ -19,7 +19,7 @@ const Dashboard = () => {
       <Box mx="auto">
         {/* Placeholder for future content */}
         <SimpleGrid columns={{ base: 1, sm: 2, md: 3, lg: 4 }} gap={4} mt={4}>
-            {placeholders}
+          {placeholders}
         </SimpleGrid>
       </Box>
     )

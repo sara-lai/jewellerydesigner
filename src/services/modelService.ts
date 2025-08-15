@@ -8,16 +8,22 @@ const createModel = async (data: Prisma.MLModelCreateInput) => {
     return newModel
 }
 
-const updateModel = async (model_id: number, data: Prisma.MLModelUpdateInput) => { 
+const updateModel = async (modelId: number, data: Prisma.MLModelUpdateInput) => { 
     // prisma only changes fields specified
     const updatedModel = await prisma.mLModel.update({
-        where: { id: model_id },
+        where: { id: modelId },
         data: data,        
     })    
     return updatedModel    
 }
 
+const getModelById = async(modelId: number) => {
+    const model = await prisma.mLModel.findUnique({ where: { id: modelId } });
+    return model
+}
+
 export {
     createModel,
-    updateModel
+    updateModel,
+    getModelById
 }
