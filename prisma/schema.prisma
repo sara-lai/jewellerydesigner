@@ -30,7 +30,7 @@ enum ModelStatus {
 // todo explore best way to "link" model to user
 model MLModel {
   id                Int         @id @default(autoincrement())
-  user_id           String      @unique // clerk user_id
+  user_id           String      // clerk user_id
   name              String?
   stylePrompt       String?
   imageUrls         String[]

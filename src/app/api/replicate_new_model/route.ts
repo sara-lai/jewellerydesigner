@@ -39,13 +39,12 @@ export async function POST(request: Request) {
             modelHostId: body.version
         })
         console.log('updated model after webhook!', updatedModel) 
+
+        // run inference for user freebies
+        newModelSamples(model.id)        
     } else {
         console.log('model training unexpected status.... better do something')
     }
-
-    // run inference for user freebies ?? (probably another module)
-    newModelSamples(model.id)
-
 
     // send an email to user that model is ready (or update FE via pusher??)
 
