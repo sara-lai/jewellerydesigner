@@ -66,11 +66,11 @@ const newModelSamples = async (modelId: number) => {
     // kick off more replicate tasks, get alerted with webhooks
     // not sure all test models support num_outputs
     // multiple options? predictions.create ("background") vs. replicate.run (must wait for result)
-    for (let i = 0; i < 10; i++) {
+    for (let i = 0; i < 8; i++) {
         await replicate.predictions.create({
             "version": model.modelHostId,
             "input": { 
-                "prompt": `Studio photo of jewelry in style of ${process.env.TWORD_TEST}, white background`,
+                "prompt": process.env.PROMPT_TEST,
                 "num_outputs": 2,
             },
             "webhook": `${webhookBase}/api/new_model_first_samples?modelId=${modelId}`,
