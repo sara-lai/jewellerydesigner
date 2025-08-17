@@ -36,7 +36,7 @@ export async function POST(request: Request) {
         const updatedModel = await modelService.updateModel(model.id, {
             modelStatus: "COMPLETED",
             completedTraining: true,
-            modelHostId: body.version
+            modelHostId: body.output.version
         })
         console.log('updated model after webhook!', updatedModel) 
 
@@ -47,6 +47,7 @@ export async function POST(request: Request) {
     }
 
     // send an email to user that model is ready (or update FE via pusher??)
+    // hmm only send after model samples tho?
 
     return NextResponse.json({ detail: "all good!" }, { status: 200 });
 }

@@ -31,10 +31,15 @@ const getLatestTrainedModel = async (user_id: string) => {
     return latestModel
 }
 
+const getModelsForCurrentUser = async (user_id: string) => {
+    const allModels = await prisma.mLModel.findMany({ where: { user_id: user_id }})
+    return allModels    
+}
 
 export {
     createModel,
     updateModel,
     getModelById,
-    getLatestTrainedModel
+    getLatestTrainedModel,
+    getModelsForCurrentUser,
 }

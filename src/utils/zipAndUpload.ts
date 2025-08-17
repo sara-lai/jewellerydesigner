@@ -6,16 +6,8 @@ import fetch from 'node-fetch' // for streaming
 //import { v2 as cloudinary } from 'cloudinary'
 import { S3Client, PutObjectCommand } from "@aws-sdk/client-s3"
 
-// todo - problem, cloudinary zip 10MB upload limit!.... trying s3
-
 export default async function zipAndUpload(modelId: number, imageUrls: string[]){
-    
-    // graveyard cloudianry
-    // cloudinary.config({
-    //     cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
-    //     api_key: process.env.CLOUDINARY_API_KEY,
-    //     api_secret: process.env.CLOUDINARY_API_SECRET,
-    // })    
+   
     const s3 = new S3Client({
         region: process.env.AWS_REGION,
         credentials: {
@@ -34,7 +26,7 @@ export default async function zipAndUpload(modelId: number, imageUrls: string[])
     for (const [i, url] of imageUrls.entries()) {
         const response = await fetch(url);
         const ext = url.split('.').pop()?.split('?')[0] || 'jpg'
-        archive.append(response.body, { name: `image${i}.${ext}` })        
+        archive.append(response.body, { name: `image${i}.${ext}` })    
     }
 
     await archive.finalize()
@@ -46,20 +38,6 @@ export default async function zipAndUpload(modelId: number, imageUrls: string[])
     })
 
     console.log('done preparing the zip file! time to upload')
-
-    // graveyard cloudinary
-    // // secure_urls dont work?
-    // // "Training failed. 401 Client Error: Unauthorized for url: https://res.cloudinary.com/dmv9qljos/raw/upload/v1755241886/training-zips/2-1755241882471.zip"
-    // const { secure_url } = await cloudinary.uploader.upload(zipPath, {
-    //     resource_type: 'raw',
-    //     public_id: `training-zips/${modelId}-${Date.now()}.zip`,
-    //     upload_preset: process.env.NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET
-    // });
-    // fs.unlinkSync(zipPath)
-
-    // console.log('zip uploaded to cloudinary', secure_url)
-
-    // return secure_url
 
     const bucketName =  process.env.AWS_BUCKET_NAME
     const fileName = path.basename(zipPath)
@@ -81,3 +59,19 @@ export default async function zipAndUpload(modelId: number, imageUrls: string[])
     console.log('got this far and no error?, uploading zip', url)
     return url
 }
+
+
+    // graveyard cloudinary
+    // cloudinary.config({
+    //     cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
+    //     api_key: process.env.CLOUDINARY_API_KEY,
+    //     api_secret: process.env.CLOUDINARY_API_SECRET,
+    // })     
+    // // secure_urls dont work?
+    // // "Training failed. 401 Client Error: Unauthorized for url: https://res.cloudinary.com/dmv9qljos/raw/upload/v1755241886/training-zips/2-1755241882471.zip"
+    // const { secure_url } = await cloudinary.uploader.upload(zipPath, {
+    //     resource_type: 'raw',
+    //     public_id: `training-zips/${modelId}-${Date.now()}.zip`,
+    //     upload_preset: process.env.NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET
+    // });
+    // fs.unlinkSync(zipPath)

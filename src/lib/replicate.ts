@@ -16,9 +16,10 @@ const trainFirstModel = async (model) => {
     })
 
     const zipUrl = await zipAndUpload(model.id, model.imageUrls)
-
-    const destination = "sara-lai/test.02"
-    const tword = "GUSJWLRY"
+    const destination = process.env.MODEL_DESTINATION
+    const tword = process.env.TWORD_TEST
+    const steps = 1200 // ideally from form?
+    const lora_rank = 32
     const response = await replicate.trainings.create(
         'ostris', 'flux-dev-lora-trainer', '26dce37af90b9d997eeb970d92e47de3064d46c300504ae376c75bef6a9022d2',  // 8 other models to try
         {
@@ -26,10 +27,12 @@ const trainFirstModel = async (model) => {
             "input": {
                 "input_images": zipUrl,
                 "trigger_word": tword,
-                "lora_type": "subject", // vs style, vs...
-                "training_steps": 1000
+                "lora_type": "subject",
+                "training_steps": steps,
+                "lora_rank": lora_rank,
+                "autocaption_prefix": process.env.CPREFIX,
             },
-            "webhook": `${webhookBase}/api/replicate_new_model?modelId=${model.id}`, // put ngrok here.... put model id as custom param so can retreive
+            "webhook": `${webhookBase}/api/replicate_new_model?modelId=${model.id}`, // model id as custom param so can retreive
             "webhook_events_filter": ["completed"]
         }
     )
@@ -60,7 +63,6 @@ const newModelSamples = async (modelId: number) => {
 
     const model = await modelService.getModelById(modelId)
     
-
     // kick off more replicate tasks, get alerted with webhooks
     // not sure all test models support num_outputs
     // multiple options? predictions.create ("background") vs. replicate.run (must wait for result)
@@ -68,7 +70,7 @@ const newModelSamples = async (modelId: number) => {
         await replicate.predictions.create({
             "version": model.modelHostId,
             "input": { 
-                "prompt": `Jewelry in style ${model.tword}`,
+                "prompt": `Studio photo of jewelry in style of ${process.env.TWORD_TEST}, white background`,
                 "num_outputs": 2,
             },
             "webhook": `${webhookBase}/api/new_model_first_samples?modelId=${modelId}`,
@@ -85,7 +87,12 @@ const newModelSamples = async (modelId: number) => {
     // })
 }
 
+const takePhotoWithModel = async (modelId: number) => {
+    console.log('calling takePhotoWithModel')
+}
+
 export {
     trainFirstModel,
-    newModelSamples
+    newModelSamples,
+    takePhotoWithModel
 }

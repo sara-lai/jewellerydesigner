@@ -33,10 +33,10 @@ export default async function DashboardLayout({ children,}: { children: React.Re
         <Box flex="1" overflowY="auto" className="content-scroll" mb={20} pr={2}>  
           <Flex justify='space-between'position="sticky" top={0} zIndex={10} bg='white' pb={4}>
             <Box>
-              Your Generated Photos
+              Examples & Public Models              
             </Box>
             <Box>
-              Examples & Public Models
+              Your Generated Photos
             </Box>            
             <Box>
               Favourites
