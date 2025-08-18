@@ -78,3 +78,18 @@ input, textarea {
 .chakra-field__helperText {
   font-size: 13px;
 }
+
+/* colourful button */
+button.btn-colors {
+  padding: 8px 16px;
+  background-image: linear-gradient(60deg, rgb(247, 149, 51), rgb(243, 112, 85), rgb(239, 78, 123), rgb(161, 102, 171), rgb(80, 115, 184), rgb(16, 152, 173), rgb(7, 179, 155), rgb(111, 186, 130));
+  color: white;
+  border: none;
+  border-radius: 6px;
+  font-size: 14px;
+  cursor: pointer;
+  transition: background-position 0.5s;
+  background-size: 200% 100%;
+  box-shadow: none !important;
+  height: 44px;
+}

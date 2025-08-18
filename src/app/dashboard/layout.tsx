@@ -3,7 +3,7 @@ import { Box, Flex, Skeleton } from '@chakra-ui/react'
 
 export default async function DashboardLayout({ children,}: { children: React.ReactNode}) {
   return (
-    <Box className='app-wrapper'>     
+    <Box suppressHydrationWarning className='app-wrapper'>     
       <Flex justify="space-between" align="center" gap={4} p={4}>
         <Box>
           Logo

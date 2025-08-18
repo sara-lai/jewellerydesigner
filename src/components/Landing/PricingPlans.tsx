@@ -1,9 +1,9 @@
 // UI mostly created via https://v0.dev/
-
 'use client'
 
 import { useRouter } from 'next/navigation'
-import {  Box,  Button,  Heading,  Text,  VStack,  HStack,  SimpleGrid,  Container,  Flex,  Switch,  Field,} from '@chakra-ui/react'
+import { Box, Button, Heading,  Text,  VStack,  HStack,  SimpleGrid,  Container,  Flex,  Switch,  Field,} from '@chakra-ui/react'
+import type { SwitchCheckedChangeDetails } from '@chakra-ui/react'
 import { useState } from 'react'
 import { useAuth } from '@clerk/nextjs'
 
@@ -14,13 +14,19 @@ export default function Component() {
 
   // should this be in .env for test/demo env vs live?
   // can add more fields for the plan type (update after webhook)?
-  const stripeLink = 'https://buy.stripe.com/test_14A28qgZEckW89c8CT9k401?client_reference_id=' + userId
+  const stripeHobbyLink = process.env.STRIPE_HOBBY + '?client_reference_id=' + userId
+  const stripeProLink = process.env.STRIPE_PRO + '?client_reference_id=' + userId
+  const stripeMaison = 'contact_sales_link... todo'
+
+  function handlePriceToggle(details: SwitchCheckedChangeDetails){
+    setIsAnnual(details.checked)
+  }
 
   const plans = [
     {
       name: "Hobbyist",
       monthlyPrice: 19,
-      annualPrice: 179,
+      annualPrice: 149,
       period: isAnnual ? "/year" : "/month",
       description: "Perfect for new jewelry designers and the curious",
       features: [
@@ -35,11 +41,11 @@ export default function Component() {
       popular: false
     },
     {
-      name: "Pro",
-      monthlyPrice: 59,
-      annualPrice: 499, // 33% discount
+      name: "Professional",
+      monthlyPrice: 49,
+      annualPrice: 389,
       period: isAnnual ? "/year" : "/month",
-      description: "Ideal for established designers with growing clientele",
+      description: "Ideal for professional designers and makers with growing clientele",
       features: [
         "Up to 15 custom designs per month",
         "Premium material consultation",
@@ -54,11 +60,11 @@ export default function Component() {
       popular: true
     },
     {
-      name: "Maison+",
-      monthlyPrice: 299,
-      annualPrice: 2750, // 33% discount
+      name: "L'Maison",
+      monthlyPrice: 499,
+      annualPrice: 3950,
       period: isAnnual ? "/year" : "/month",
-      description: "For larger volume brands with design teams",
+      description: "White-glove service to build and support in-house models",
       features: [
         "Unlimited custom designs",
         "Exclusive material sourcing",
@@ -90,19 +96,13 @@ export default function Component() {
   }
 
   return (
-    <Flex justify='center' minH="100vh" bg="white" py={12} px={4}>
+    <Flex suppressHydrationWarning justify='center' minH="100vh" bg="white" py={12} px={4}>
       <Container maxW="7xl">
         {/* Header */}
         <VStack gap={6} textAlign="center" mb={16}>
 
           {/* Pricing Toggle */}
-          <Box 
-            bg="gray.50" 
-            p={4} 
-            borderRadius="xl" 
-            border="1px solid" 
-            borderColor="gray.200"
-          >
+          <Box bg="gray.50" p={4} borderRadius="xl" border="1px solid" borderColor="gray.200">
             <HStack gap={4} align="center">
               <Text 
                 color={!isAnnual ? "gray.900" : "gray.500"} 
@@ -110,19 +110,12 @@ export default function Component() {
               >
                 Monthly
               </Text>
-              <Field.Root display="flex" alignItems="center" w="auto">             
-                    <Switch.Root
-                        id="pricing-toggle"
-                        colorScheme="pink"
-                        size="lg"
-                        checked={isAnnual}
-                        onChange={(e) => setIsAnnual(e.target.checked)}
-                    >
-                        <Switch.Control>
-                            <Switch.Thumb />
-                        </Switch.Control>
-                    </Switch.Root>
-              </Field.Root>
+
+              <Switch.Root id="pricing-toggle" colorScheme="pink" size="lg" checked={isAnnual} onCheckedChange={handlePriceToggle}>
+                <Switch.HiddenInput />
+                <Switch.Control />
+              </Switch.Root>
+
               <VStack gap={0} align="start">
                 <Text 
                   color={isAnnual ? "gray.900" : "gray.500"} 
@@ -131,7 +124,7 @@ export default function Component() {
                   Annual
                 </Text>
                 <Text fontSize="xs" color="pink.600" fontWeight="semibold">
-                  Save up to 33%
+                  Save up to 35%
                 </Text>
               </VStack>
             </HStack>
@@ -144,7 +137,7 @@ export default function Component() {
             const savings = getSavings(plan)
             
             return (
-              <Box
+              <Flex
                 key={plan.name}
                 position="relative"
                 bg="white"
@@ -158,7 +151,8 @@ export default function Component() {
                   transform: plan.popular ? "scale(1.05) translateY(-8px)" : "translateY(-8px)",
                   shadow: "2xl"
                 }}
-                overflow="hidden"
+                direction='column'
+                justify='space-between'
               >
                 {plan.popular && (
                   <Box
@@ -259,7 +253,7 @@ export default function Component() {
                 {/* Card Footer */}
                 <Box p={8} pt={4}>
                   <Button
-                    onClick={() => router.push(stripeLink)}
+                    onClick={() => router.push(stripeHobbyLink)}
                     w="full"
                     py={6}
                     fontSize="md"
@@ -279,7 +273,7 @@ export default function Component() {
                     {plan.buttonText}
                   </Button>
                 </Box>
-              </Box>
+              </Flex>
             )
           })}
         </SimpleGrid>
@@ -289,11 +283,7 @@ export default function Component() {
           <Text color="gray.600">
             Need a custom solution? We're here to help you create something extraordinary.
           </Text>
-          <Button
-            variant="ghost"
-            color="pink.600"
-            _hover={{ bg: "pink.50", color: "pink.700" }}
-          >
+          <Button className='btn-colors'>
             Contact us for custom pricing →
           </Button>
         </VStack>

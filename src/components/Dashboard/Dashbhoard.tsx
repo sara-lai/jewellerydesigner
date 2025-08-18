@@ -2,56 +2,53 @@
 // needing to move former dashboard layout.tsx stuff here
 'use client'
 
-import { Box, Card, SimpleGrid, Skeleton, SkeletonText, Image, Flex, Text } from '@chakra-ui/react'
-import ModelTree from '@/components/Dashboard/ModelTree'
+import { Box, Card, SimpleGrid, Image, Flex, Text, Heading } from '@chakra-ui/react'
+import FeaturesPanel from './FeaturesPanel'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faSun } from '@fortawesome/free-regular-svg-icons'
 
-const Dashboard = ({latestModel, allModels}) => {
+const Dashboard = ({ latestModel, allModels }) => {
+
+    // todo - state/clicking to manage "tabs" with underlines (marketplace kampong lah)
+
     return (
-        <>
-      <Flex mx="auto" h="100vh">
-        <Box width="340px" p={4} pt={0}>  
-          <Flex className='content-scroll' direction='column' gap={4}>
-            <Box>
-             
+        <Flex mx="auto" h="100vh">
+            <Box width="340px" p={4} pt={0}>  
+                <FeaturesPanel allModels={allModels} latestModel={latestModel} />
             </Box>
-            <ModelTree />                      
-          </Flex>      
-        </Box>
-        <Box flex="1" overflowY="auto" className="content-scroll" mb={20} pr={2}>  
-          <Flex justify='space-between'position="sticky" top={0} zIndex={10} bg='white' pb={4}>
-            <Box>
-              Examples & Public Models              
+            <Box flex="1" overflowY="auto" className="content-scroll" mb={20} pr={2}>  
+                <Flex justify='space-between'position="sticky" top={0} zIndex={10} bg='white' pb={4}>
+                    <Box cursor='pointer'>
+                        <Heading size='md'>Public Models</Heading>
+                    </Box>
+                    <Box cursor='pointer'>
+                        <Heading size='md'>
+                            {/* <FontAwesomeIcon icon={faSun} size="xl" style={{ maxHeight: '30px'}} /> */}
+                            Your AI Photos
+                        </Heading>
+                    </Box>            
+                    <Box cursor='pointer'>
+                        <Heading size='md'>Favourites</Heading>
+                    </Box> 
+                    <Box pr={8} cursor='pointer'>
+                        <Heading size='md'>Deleted</Heading>
+                    </Box>                                    
+                </Flex>
+                <Box mx="auto">
+                    {/* Placeholder for future content */}
+                    <SimpleGrid columns={{ base: 1, sm: 2, md: 3, lg: 4 }} gap={4} mt={4}>
+                    {latestModel.sampleUrls.map((img, i) => (
+                        <Image key={i} src={img} />
+                    ))}         
+                    </SimpleGrid>
+                </Box>     
             </Box>
-            <Box>
-              Your Generated Photos
-            </Box>            
-            <Box>
-              Favourites
-            </Box> 
-            <Box pr={8}>
-              Deleted
-            </Box>                                    
-          </Flex>
-            <Box mx="auto">
-                {/* Placeholder for future content */}
-                <SimpleGrid columns={{ base: 1, sm: 2, md: 3, lg: 4 }} gap={4} mt={4}>
-                {latestModel.sampleUrls.map((img, i) => (
-                    <Image key={i} src={img} />
-                ))}         
-                </SimpleGrid>
-            </Box>     
-        </Box>
       </Flex>
-
-        
-      </>
     ) 
 
 }
 
 export default Dashboard
-
-
 
 // graveyard, placeholders
 // const PhotoCardSkeleton = () => (
