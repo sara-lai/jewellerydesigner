@@ -11,6 +11,8 @@ import Dashboard from '@/components/Dashboard/Dashbhoard'
 const DashboardPage = async () => {
     const currentUser = await userService.currentUser()
 
+    // todo - need to sth prisma to include images with these calls
+
     // always show latest Model output (make sure images are sorted by creation time....uhoh)
     const latestModel = await modelService.getLatestTrainedModel(currentUser.clerk_id)
 
@@ -22,7 +24,7 @@ const DashboardPage = async () => {
     return (
       <>
         {firstVisit ? (
-          <Flex justify='center' align='center'>
+          <Flex justify='center' align='center' height='80%'>
             <Text>Your first model is training! Please come back in 20-30 minutes. We'll also send you an email.</Text>
           </Flex>
         ) : (

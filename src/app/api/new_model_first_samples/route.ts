@@ -2,6 +2,7 @@
 import { NextResponse } from 'next/server';
 import { validateWebhook } from 'replicate';
 import * as modelService from '@/services/modelService'
+import * as aiPhotoService from '@/services/aiPhotoService'
 
 // note
 // docs give warning about multiple webhook requests possible
@@ -42,7 +43,9 @@ export async function POST(request: Request) {
         // response.output expect an aray of multi images potentially?
 
 
-        // todo - change this to use new AIPhoto schema 
+        // brainstorm
+        // change this to use new AIPhoto schema 
+        // but keep sampleUrls stuff but also add the new AIPhoto & associate with the model
 
         // maybe: get existing sampleUrls.... the combine with new ones from webhook.... then call updateModel
         const existingUrls = model.sampleUrls
@@ -53,6 +56,13 @@ export async function POST(request: Request) {
             console.log('unexpected, output is what kind of thing?', body.output)
             newUrls = [body.output]
         }
+
+        // try new AIPhoto here before combine
+        for (let newUrl of newUrls) {
+            const aiphoto = await aiPhotoService.createAIPhoto(model.id, model.user_id, newUrl)
+            console.log('create photo', aiphoto)
+        }
+
         const combinedUrls = existingUrls.concat(newUrls)      
 
         const updatedModel = await modelService.updateModel(model.id, {

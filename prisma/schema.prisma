@@ -44,18 +44,20 @@ model MLModel {
   agreedToTerms     Boolean     @default(false)
   createdAt         DateTime    @default(now())
   updatedAt         DateTime    @updatedAt
-  photos            AIPhoto[]
+  aiphotos          AIPhoto[]
 }
 
 // trying full reference
 model AIPhoto {
-  id        Int      @id @default(autoincrement())
-  user_id   String // clerk user_id
-  url       String
-  modelId   Int?
-  model     MLModel? @relation(fields: [modelId], references: [id])
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  id         Int      @id @default(autoincrement())
+  user_id    String // clerk user_id
+  url        String
+  modelId    Int?
+  model      MLModel? @relation(fields: [modelId], references: [id])
+  favourited Boolean  @default(false)
+  deleted    Boolean  @default(false)
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
 }
 
 // import * from "./../src/models/user.prisma" (alternate approach to use /models)

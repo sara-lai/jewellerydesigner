@@ -40,9 +40,9 @@ const Dashboard = ({ latestModel, allModels }) => {
                 <Box mx="auto">
                     {/* Placeholder for future content */}
                     <SimpleGrid columns={{ base: 1, sm: 2, md: 3, lg: 4 }} gap={4} mt={4}>
-                    {latestModel.sampleUrls.map((img, i) => (
+                    {latestModel.aiphotos.map((aiphoto, i) => (
                         // todo , photoCard component with nice effect/menu
-                        <Image key={i} src={img} />
+                        <Image key={i} src={aiphoto.url} />
                     ))}         
                     </SimpleGrid>
                 </Box>     
