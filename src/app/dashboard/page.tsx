@@ -2,7 +2,7 @@ import { Flex, Text } from '@chakra-ui/react'
 
 import * as modelService from '@/services/modelService'
 import * as userService from '@/services/userService'
-import Dashboard from '@/components/Dashboard/Dashbhoard'
+import Dashboard from '@/components/Dashboard/Dashboard'
 
 // brainstorm
 // next.js have to get state into client components not here, will use a parent client component (Dashboard)
