@@ -18,3 +18,16 @@
 .content-scroll::-webkit-scrollbar {
     display: none;
 }
+
+.dashboard-container .active {
+    border-bottom: 2px solid black;
+}
+
+.dashboard-container .tab {
+    font-weight: 700;
+    font-size: 1.1rem;
+    cursor: pointer;
+    padding-bottom: 6px;
+    letter-spacing: -.3px;
+    opacity: .7;
+}

@@ -31,7 +31,6 @@ export async function POST(request: Request) {
         console.log('problem from replicate!!!', body.error)
     }
 
-
     // everything above is same for other webhooks.... whats good way to
 
     if (body.status ==='succeeded'){
@@ -43,9 +42,11 @@ export async function POST(request: Request) {
         // response.output expect an aray of multi images potentially?
 
 
+        // todo - change this to use new AIPhoto schema 
+
         // maybe: get existing sampleUrls.... the combine with new ones from webhook.... then call updateModel
         const existingUrls = model.sampleUrls
-        let newUrls;
+        let newUrls: string[];
         if (Array.isArray(body.output)){
             newUrls = body.output
         } else {

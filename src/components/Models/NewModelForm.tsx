@@ -93,7 +93,7 @@ const NewModelForm = () => {
                             Model Name
                         </Field.Label>
                         <Input name="name" placeholder="Enter model name" />
-                        <Field.HelperText>Any name, for your own reference</Field.HelperText>
+                        <Field.HelperText>Choose a name for your own reference, unique for each model</Field.HelperText>
                     </Field.Root>
 
                     <Field.Root>

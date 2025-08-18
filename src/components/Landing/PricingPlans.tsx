@@ -2,7 +2,7 @@
 'use client'
 
 import { useRouter } from 'next/navigation'
-import { Box, Button, Heading,  Text,  VStack,  HStack,  SimpleGrid,  Container,  Flex,  Switch,  Field,} from '@chakra-ui/react'
+import { Box, Button, Heading, Text, VStack, HStack, SimpleGrid, Container, Flex, Switch} from '@chakra-ui/react'
 import type { SwitchCheckedChangeDetails } from '@chakra-ui/react'
 import { useState } from 'react'
 import { useAuth } from '@clerk/nextjs'
@@ -29,14 +29,7 @@ export default function Component() {
       annualPrice: 149,
       period: isAnnual ? "/year" : "/month",
       description: "Perfect for new jewelry designers and the curious",
-      features: [
-        "Up to 5 custom designs per month",
-        "Basic material consultation",
-        "Email support",
-        "Design revision (1 per piece)",
-        "Standard delivery timeline",
-        "Basic portfolio showcase"
-      ],
+      features: process.env.NEXT_PUBLIC_HOBBYIST_FEATURES.split(','),
       buttonText: "Get Started",
       popular: false
     },
@@ -45,17 +38,8 @@ export default function Component() {
       monthlyPrice: 49,
       annualPrice: 389,
       period: isAnnual ? "/year" : "/month",
-      description: "Ideal for professional designers and makers with growing clientele",
-      features: [
-        "Up to 15 custom designs per month",
-        "Premium material consultation",
-        "Priority email & phone support",
-        "Design revisions (3 per piece)",
-        "Expedited delivery options",
-        "Professional portfolio showcase",
-        "Client management tools",
-        "3D rendering included"
-      ],
+      description: "Ideal for professional makers with growing clientele",
+      features: process.env.NEXT_PUBLIC_PRO_FEATURES.split(','),
       buttonText: "Choose Professional",
       popular: true
     },
@@ -64,19 +48,8 @@ export default function Component() {
       monthlyPrice: 499,
       annualPrice: 3950,
       period: isAnnual ? "/year" : "/month",
-      description: "White-glove service to build and support in-house models",
-      features: [
-        "Unlimited custom designs",
-        "Exclusive material sourcing",
-        "24/7 dedicated support",
-        "Unlimited design revisions",
-        "Same-day delivery available",
-        "Premium portfolio & branding",
-        "Advanced client management",
-        "3D rendering & prototyping",
-        "Wholesale pricing access",
-        "Personal design consultant"
-      ],
+      description: "Complete infra setup owned by your company, with support",
+      features: process.env.NEXT_PUBLIC_MAISON_FEATURES.split(','),
       buttonText: "Contact Sales",
       popular: false
     }
@@ -111,7 +84,7 @@ export default function Component() {
                 Monthly
               </Text>
 
-              <Switch.Root id="pricing-toggle" colorScheme="pink" size="lg" checked={isAnnual} onCheckedChange={handlePriceToggle}>
+              <Switch.Root id="pricing-toggle" colorPalette="pink" size="lg" checked={isAnnual} onCheckedChange={handlePriceToggle}>
                 <Switch.HiddenInput />
                 <Switch.Control />
               </Switch.Root>

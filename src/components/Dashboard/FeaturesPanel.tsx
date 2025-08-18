@@ -4,6 +4,7 @@ import { useState } from 'react'
 import { Box, Flex, Text, Heading, Button, Textarea } from '@chakra-ui/react'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faFolderOpen, faCamera } from '@fortawesome/free-regular-svg-icons'
+import { FiSettings, FiShuffle, FiTerminal } from 'react-icons/fi'
 
 const FeaturesPanel = ({ allModels, latestModel }) => {
 
@@ -18,11 +19,10 @@ const FeaturesPanel = ({ allModels, latestModel }) => {
     }
 
     return (
-        <Flex className='content-scroll' direction='column' gap={8} p={2}>
+        <Flex className='content-scroll' direction='column' gap={8} p={2} h='100vh' pt={6} pr={8} borderRight='1px solid rgba(0,0,0,.1)'>
 
             {/* Model selection stuff here, should update photos on right */}
             <Box>
-                
                 <Heading size='md' cursor="pointer" mb={4}>
                     <Flex gap={1} align='center'>
                         <FontAwesomeIcon icon={faFolderOpen} size="xl" style={{ maxHeight: '30px'}} />
@@ -53,7 +53,22 @@ const FeaturesPanel = ({ allModels, latestModel }) => {
             </Flex>
 
             {/* The remix photo feature  */}
-            {/* <Heading size='md'>Remix Photos</Heading> */}
+            {/* <Flex align='center' cursor='pointer' gap={1}>
+                <FiShuffle className='fi-icon-thicken' color="gray.700" size="2rem" />
+                <Heading size='md'>Remix a photo</Heading>
+            </Flex> */}
+
+            {/* new model  */}
+            <Flex align='center' cursor='pointer' gap={1}>
+                <FiTerminal className='fi-icon-thicken' color="gray.700" size="2rem" />
+                <Heading size='md'>Train New AI Model</Heading>
+            </Flex>            
+
+            {/* user settings */}
+            <Flex align='center' cursor='pointer' gap={1}>
+                <FiSettings className='fi-icon-thicken' color="gray.700" size="2rem" />
+                <Heading size='md'>Your Account</Heading>
+            </Flex>
         </Flex>        
     )
 }

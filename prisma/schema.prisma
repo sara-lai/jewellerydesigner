@@ -27,10 +27,9 @@ enum ModelStatus {
   FAILED
 }
 
-// todo explore best way to "link" model to user
 model MLModel {
   id                Int         @id @default(autoincrement())
-  user_id           String      // clerk user_id
+  user_id           String // clerk user_id
   name              String?
   stylePrompt       String?
   imageUrls         String[]
@@ -45,6 +44,18 @@ model MLModel {
   agreedToTerms     Boolean     @default(false)
   createdAt         DateTime    @default(now())
   updatedAt         DateTime    @updatedAt
+  photos            AIPhoto[]
+}
+
+// trying full reference
+model AIPhoto {
+  id        Int      @id @default(autoincrement())
+  user_id   String // clerk user_id
+  url       String
+  modelId   Int?
+  model     MLModel? @relation(fields: [modelId], references: [id])
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
 
 // import * from "./../src/models/user.prisma" (alternate approach to use /models)

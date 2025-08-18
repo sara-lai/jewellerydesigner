@@ -41,7 +41,7 @@ export default function RootLayout({
         <head>
           <script src="https://widget.cloudinary.com/v2.0/global/all.js" type="text/javascript" async />
         </head>
-        <body className={`${inter.variable} ${montserrat.variable}`}>
+        <body suppressHydrationWarning className={`${inter.variable} ${montserrat.variable}`}>
           <Provider>{children}</Provider>
         </body>
       </html>
