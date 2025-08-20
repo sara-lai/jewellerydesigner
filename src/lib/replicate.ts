@@ -87,9 +87,31 @@ const newModelSamples = async (modelId: number) => {
     // })
 }
 
-const takePhotoWithModel = async (modelId: number) => {
+const takePhotoWithModel = async (modelId: number, numPhotos: number, prompt: string) => {
     console.log('calling takePhotoWithModel')
+
+    // braintstorm
+    // possibly enchance prompt?
+
+    const replicate = new Replicate({
+        auth: process.env.REPLICATE_API_TOKEN,
+    })
+
+    const model = await modelService.getModelById(modelId)
+
+    for (let i = 0; i < numPhotos; i++) {
+        await replicate.predictions.create({
+            "version": model.modelHostId,
+            "input": { 
+                "prompt":  process.env.CPREFIX + ', ' + prompt,
+                "num_outputs": 2,
+            },
+            "webhook": `${webhookBase}/api/new_model_first_samples?modelId=${modelId}`,
+            "webhook_events_filter": ["completed"]
+        })
+    }    
 }
+
 
 export {
     trainFirstModel,

@@ -6,13 +6,34 @@ import { Box, Flex, Text, Heading, Button, Textarea, Span } from '@chakra-ui/rea
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faFolderOpen, faCamera } from '@fortawesome/free-regular-svg-icons'
 import { FiSettings, FiShuffle, FiTerminal } from 'react-icons/fi'
+import { takePhotoWithModel } from '@/lib/replicate'
 
-const FeaturesPanel = ({ allModels, currentModel, setCurrentModel }) => {
+const FeaturesPanel = ({ allModels, currentModel, setCurrentModel, setNewPhotoUI }) => {
     const router = useRouter()
+    const [isDisabled, setIsDisabled] = useState(false)
+    const [prompt, setPrompt] = useState("")
 
     function switchModel(modelId){
         const theModel = allModels.find(model => modelId === model.id)
         setCurrentModel(theModel)
+    }
+
+    function initiateNewPhotos(){
+        // brainstorm
+        // make sure prompt is included
+        if (!prompt) return
+
+        // 2 major things: 
+        // 1) kick off back end / api stuff (pass prompt in)
+        // 2) set loading cards on Dashboard
+        setNewPhotoUI(2) // hardcoding 2 for now
+
+        takePhotoWithModel() 
+
+        // disable button & clear prompt
+        setIsDisabled(true)
+
+        // somehow when back end is done, need to load the images, and undisable form
     }
 
     return (
@@ -55,9 +76,15 @@ const FeaturesPanel = ({ allModels, currentModel, setCurrentModel }) => {
                 <Text fontSize='sm'>Generate images using your currently selected model (2 photos are taken by default).</Text>
                 <Text fontSize='sm'>Use Model: <b>{currentModel.name}</b></Text>
 
-                <Textarea minH='100px' name="stylePrompt" placeholder="Enter a prompt to describe your design: More descriptive prompts typically yield better results." />
+                <Textarea minH='100px' name="stylePrompt" 
+                    placeholder="Enter a prompt to describe your design: More descriptive prompts typically yield better results." 
+                    onChange={(e) => setPrompt(e.target.value)}
+                    value={prompt}
+                />
 
-                <Button w='100%' className='btn-colors'>Take AI Photos (~12s)</Button>  
+                <Button w='100%' className='btn-colors' onClick={initiateNewPhotos} disabled={isDisabled}>
+                    {isDisabled ? 'Processing' : 'Take AI Photos (~12s)'}
+                </Button>  
             </Flex>
 
             {/* The remix photo feature  */}

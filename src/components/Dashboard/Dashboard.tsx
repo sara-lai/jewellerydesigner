@@ -3,26 +3,44 @@
 'use client'
 
 import { useState } from 'react'
-import { Box, Card, SimpleGrid, Image, Flex, Text, Heading, Button } from '@chakra-ui/react'
+import { Box, Card, Skeleton, SimpleGrid, Image, Flex, Text, Heading, Button, Spinner } from '@chakra-ui/react'
 import FeaturesPanel from './FeaturesPanel'
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faSun } from '@fortawesome/free-regular-svg-icons'
-import { FiSettings } from 'react-icons/fi'
 import Link from 'next/link'
-
 
 import '@/app/dashboard/dashboard.css'
 
 const Dashboard = ({ latestModel, allModels }) => {
 
     const [currentModel, setCurrentModel] = useState({...latestModel})
+    const [loadingCards, setLoadingCards] = useState([])
 
     // todo - state/clicking to manage "tabs" with underlines (marketplace kampong lah)
+
+    function setNewPhotoUI(numPhotos: number){
+        // argument is number of photos being generated/ number of cards to display
+
+        // reusing graveyard placeholders
+        // todo - loading spinners & counters
+        const PhotoCardSkeleton = () => (
+            <Card.Root minH='300px'minW='250px' boxShadow="md">
+                <Card.Body p={2}>
+                    <Flex justify='center' align='center' h='100%'>
+                        <Spinner size='xl' />
+                    </Flex>
+                </Card.Body>
+            </Card.Root>
+        )
+        const cards = []
+        for (let i = 0; i < numPhotos; i++){
+            cards.push(<PhotoCardSkeleton key={i} />)
+        }
+        setLoadingCards(cards)
+    }
 
     return (
         <Flex className='dashboard-container' mx="auto" h="100vh">
             <Box width="380px" pt={0}>  
-                <FeaturesPanel allModels={allModels} currentModel={currentModel} setCurrentModel={setCurrentModel} />
+                <FeaturesPanel setNewPhotoUI={setNewPhotoUI} allModels={allModels} currentModel={currentModel} setCurrentModel={setCurrentModel} />
             </Box>
             <Box flex="1" overflowY="auto" className="content-scroll" mb={20} pr={2}>  
                 <Box position="sticky" top={0} zIndex={10} bg='white'>
@@ -63,7 +81,8 @@ const Dashboard = ({ latestModel, allModels }) => {
                 <Box mx="auto">
                     {/* Placeholder for future content */}
                     <SimpleGrid columns={{ base: 1, sm: 2, md: 3, lg: 4 }} gap={4} mt={4}>
-                    {currentModel.aiphotos.map((aiphoto, i) => (
+                    {loadingCards}
+                    {currentModel && currentModel.aiphotos?.map((aiphoto, i) => (
                         // todo , photoCard component with nice effect/menu
                         <Image key={i} src={aiphoto.url} />
                     ))}         

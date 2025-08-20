@@ -14,8 +14,8 @@ export default function Component() {
 
   // should this be in .env for test/demo env vs live?
   // can add more fields for the plan type (update after webhook)?
-  const stripeHobbyLink = process.env.STRIPE_HOBBY + '?client_reference_id=' + userId
-  const stripeProLink = process.env.STRIPE_PRO + '?client_reference_id=' + userId
+  const stripeHobbyLink = process.env.NEXT_PUBLIC_STRIPE_HOBBY + '?client_reference_id=' + userId
+  const stripeProLink = process.env.NEXT_PUBLIC_STRIPE_PRO + '?client_reference_id=' + userId
   const stripeMaison = 'contact_sales_link... todo'
 
   function handlePriceToggle(details: SwitchCheckedChangeDetails){
