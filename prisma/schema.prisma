@@ -48,6 +48,7 @@ model MLModel {
 }
 
 // trying full reference
+// todo - maybe full reference with user too ? for "all photos"
 model AIPhoto {
   id         Int      @id @default(autoincrement())
   user_id    String // clerk user_id

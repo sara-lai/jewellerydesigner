@@ -40,7 +40,6 @@ const NewModelForm = () => {
         <Flex justify='center' m={8}>
             <form action={handleSubmit}>
                 <VStack gap={6} align="stretch" maxW='740px'>
-                    <Heading size='xl' fontSize='40px' mb={4}>Your First Model</Heading>
                     <Box mb={6}>
                         <Heading size='md' mb={4}>Upload 10-30 Images</Heading>                        
 

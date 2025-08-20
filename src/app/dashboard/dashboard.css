@@ -31,3 +31,7 @@
     letter-spacing: -.3px;
     opacity: .7;
 }
+
+.dashboard-container .selected {
+    font-weight: 600;
+}

@@ -1,25 +1,22 @@
 'use client'
 // a LOT of possible features here 
 import { useState } from 'react'
-import { Box, Flex, Text, Heading, Button, Textarea } from '@chakra-ui/react'
+import { useRouter } from 'next/navigation'
+import { Box, Flex, Text, Heading, Button, Textarea, Span } from '@chakra-ui/react'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faFolderOpen, faCamera } from '@fortawesome/free-regular-svg-icons'
 import { FiSettings, FiShuffle, FiTerminal } from 'react-icons/fi'
 
-const FeaturesPanel = ({ allModels, latestModel }) => {
-
-    const [currentModel, setCurrentModel] = useState(latestModel)
+const FeaturesPanel = ({ allModels, currentModel, setCurrentModel }) => {
+    const router = useRouter()
 
     function switchModel(modelId){
-        console.log('switch model to', modelId)
-
-        // filter latestModel from allModels 
-        // todo - an 'active' class
-        // then load photos for that model.... (coordinate with parent)
+        const theModel = allModels.find(model => modelId === model.id)
+        setCurrentModel(theModel)
     }
 
     return (
-        <Flex className='content-scroll' direction='column' gap={8} p={2} h='100vh' pt={6} pr={8} borderRight='1px solid rgba(0,0,0,.1)'>
+        <Flex className='content-scroll' direction='column' gap={8} h='100vh' pt={6} pr={6} pl={6} borderRight='1px solid rgba(0,0,0,.1)'>
 
             {/* Model selection stuff here, should update photos on right */}
             <Box>
@@ -29,11 +26,22 @@ const FeaturesPanel = ({ allModels, latestModel }) => {
                         <span>Your Models</span>
                     </Flex>
                 </Heading>
+                <Flex direction='column' gap={1}>
                 {allModels.map((model, i) => (
-                    <Box key={i} cursor='pointer' ml={6} onClick={() => switchModel(model.id)}>
-                        <Text>{model.name}</Text>
-                    </Box>
+                    <div key={i}>
+                        {model.completedTraining && (
+                            <Box cursor='pointer' ml={6} onClick={() => switchModel(model.id)}>
+                                <Text className={model.id === currentModel.id ? 'selected' : ''}>{model.name}</Text>
+                            </Box>
+                        )}
+                        {model.modelStatus === 'TRAINING' && (
+                            <Box ml={6}>
+                                <Text fontStyle='italic'>{model.name} <Span fontSize='.8rem'>(training)</Span></Text>
+                            </Box>                        
+                        )}
+                    </div>
                 ))}
+                </Flex>
             </Box>
                             
             {/* The take AI photo feature */}
@@ -45,11 +53,11 @@ const FeaturesPanel = ({ allModels, latestModel }) => {
                     </Flex>
                 </Heading>
                 <Text fontSize='sm'>Generate images using your currently selected model (2 photos are taken by default).</Text>
-                <Text fontSize='sm'>Selected Model: <b>{currentModel.name}</b></Text>
+                <Text fontSize='sm'>Use Model: <b>{currentModel.name}</b></Text>
 
                 <Textarea minH='100px' name="stylePrompt" placeholder="Enter a prompt to describe your design: More descriptive prompts typically yield better results." />
 
-                <Button w='100%' className='btn-colors'>Take AI Photos (~10s)</Button>  
+                <Button w='100%' className='btn-colors'>Take AI Photos (~12s)</Button>  
             </Flex>
 
             {/* The remix photo feature  */}
@@ -59,7 +67,7 @@ const FeaturesPanel = ({ allModels, latestModel }) => {
             </Flex> */}
 
             {/* new model  */}
-            <Flex align='center' cursor='pointer' gap={1}>
+            <Flex align='center' cursor='pointer' gap={1} onClick={() => router.push('/dashboard/new-model')}>
                 <FiTerminal className='fi-icon-thicken' color="gray.700" size="2rem" />
                 <Heading size='md'>Train New AI Model</Heading>
             </Flex>            
