@@ -27,7 +27,7 @@ const getLatestTrainedModel = async (user_id: string) => {
     const latestModel = await prisma.mLModel.findFirst({
         where: { user_id: user_id },
         orderBy: { createdAt: "desc" },
-        include: { aiphotos: true }
+        include: { aiphotos: { orderBy: { createdAt: "desc" } }} // order aiphotos too, most recent first
     })
     return latestModel
 }
@@ -35,7 +35,7 @@ const getLatestTrainedModel = async (user_id: string) => {
 const getModelsForCurrentUser = async (user_id: string) => {
     const allModels = await prisma.mLModel.findMany({ 
         where: { user_id: user_id }, 
-        include: { aiphotos: true }
+        include: { aiphotos: { orderBy: { createdAt: "desc" } }}
     })
     return allModels    
 }

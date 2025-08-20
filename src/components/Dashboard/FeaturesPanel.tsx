@@ -7,6 +7,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faFolderOpen, faCamera } from '@fortawesome/free-regular-svg-icons'
 import { FiSettings, FiShuffle, FiTerminal } from 'react-icons/fi'
 import { takePhotoWithModel } from '@/lib/replicate'
+import runNewImages from '@/app/actions/runNewImages'
 
 const FeaturesPanel = ({ allModels, currentModel, setCurrentModel, setNewPhotoUI }) => {
     const router = useRouter()
@@ -28,7 +29,7 @@ const FeaturesPanel = ({ allModels, currentModel, setCurrentModel, setNewPhotoUI
         // 2) set loading cards on Dashboard
         setNewPhotoUI(2) // hardcoding 2 for now
 
-        takePhotoWithModel() 
+        runNewImages(currentModel.id, 2, prompt)
 
         // disable button & clear prompt
         setIsDisabled(true)

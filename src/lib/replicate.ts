@@ -103,10 +103,10 @@ const takePhotoWithModel = async (modelId: number, numPhotos: number, prompt: st
         await replicate.predictions.create({
             "version": model.modelHostId,
             "input": { 
-                "prompt":  process.env.CPREFIX + ', ' + prompt,
-                "num_outputs": 2,
+                "prompt": prompt,//process.env.CPREFIX + ', ' + prompt,
+                "num_outputs": 1,
             },
-            "webhook": `${webhookBase}/api/new_model_first_samples?modelId=${modelId}`,
+            "webhook": `${webhookBase}/api/new_images?modelId=${modelId}`,
             "webhook_events_filter": ["completed"]
         })
     }    
