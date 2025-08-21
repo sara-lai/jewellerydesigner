@@ -21,7 +21,7 @@ const trainFirstModel = async (model) => {
     const steps = 1200 // ideally from form?
     const lora_rank = 32
     const response = await replicate.trainings.create(
-        'ostris', 'flux-dev-lora-trainer', '26dce37af90b9d997eeb970d92e47de3064d46c300504ae376c75bef6a9022d2',  // 8 other models to try
+        process.env.MODEL_INFO1, process.env.MODEL_INFO2, process.env.MODEL_INFO3,
         {
             "destination": destination,
             "input": {

@@ -7,12 +7,18 @@ import { Box, Card, Skeleton, SimpleGrid, Image, Flex, Text, Heading, Button, Sp
 import FeaturesPanel from './FeaturesPanel'
 import Link from 'next/link'
 
+import YourAIPhotos from './YourAIPhotos'
+import Favourites from './Favourites'
+import Deleted from './Deleted'
+import PublicModels from './PublicModels'
+
 import '@/app/dashboard/dashboard.css'
 
 const Dashboard = ({ latestModel, allModels }) => {
 
     const [currentModel, setCurrentModel] = useState({...latestModel})
     const [loadingCards, setLoadingCards] = useState([])
+    const [tab, setTab] = useState('all')
 
     // todo - state/clicking to manage "tabs" with underlines (marketplace kampong lah)
 
@@ -62,32 +68,36 @@ const Dashboard = ({ latestModel, allModels }) => {
                         </Flex>              
                     </Flex>                
                     <Flex justify='space-evenly' pt={3} borderBottom='1px solid rgba(0,0,0,.1)'>
-                        <Box cursor='pointer' className='tab'>
-                            <Text pl={4} pr={4}>Public Models</Text>
+                        <Box cursor='pointer' className={tab === 'public' ? 'active tab' : 'tab'} onClick={()=> setTab('public')}>
+                            <Text pl={4} pr={4}>
+                                Public Models
+                            </Text>
                         </Box>
-                        <Box cursor='pointer' className='active tab'>
+                        <Box cursor='pointer' className={tab === 'all' ? 'active tab' : 'tab'} onClick={()=> setTab('all')}>
                             <Text pl={4} pr={4}>
                                 Your AI Photos
                             </Text>
                         </Box>            
-                        <Box cursor='pointer' className='tab'>
-                            <Text pl={4} pr={4}>Favourites</Text>
+                        <Box cursor='pointer' className={tab === 'favourites' ? 'active tab' : 'tab'} onClick={()=> setTab('favourites')}>
+                            <Text pl={4} pr={4}>
+                                Favourites
+                            </Text>
                         </Box> 
-                        <Box pr={8} cursor='pointer' className='tab'>
-                            <Text pl={4} pr={4}>Deleted</Text>
+                        <Box pr={8} cursor='pointer' className={tab === 'deleted' ? 'active tab' : 'tab'} onClick={()=> setTab('deleted')}>
+                            <Text pl={4} pr={4}>
+                                Deleted
+                            </Text>
                         </Box>                                    
                     </Flex>
                 </Box>
+
                 <Box mx="auto">
-                    {/* Placeholder for future content */}
-                    <SimpleGrid columns={{ base: 1, sm: 2, md: 3, lg: 4 }} gap={4} mt={4}>
-                    {loadingCards}
-                    {currentModel && currentModel.aiphotos?.map((aiphoto, i) => (
-                        // todo , photoCard component with nice effect/menu
-                        <Image key={i} src={aiphoto.url} />
-                    ))}         
-                    </SimpleGrid>
-                </Box>     
+                    {tab === 'all' && <YourAIPhotos loadingCards={loadingCards} currentModel={currentModel} />}
+                    {tab === 'favourites' && <Favourites />}
+                    {tab === 'deleted' && <Deleted />}
+                    {tab ==='public' && <PublicModels />}
+                </Box>
+                
             </Box>
       </Flex>
     ) 
