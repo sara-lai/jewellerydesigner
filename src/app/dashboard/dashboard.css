@@ -35,3 +35,17 @@
 .dashboard-container .selected {
     font-weight: 600;
 }
+
+.icon-circle {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  border: 2px solid white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(255, 255, 255, 0.1); /* optional */
+  color: white; /* or #ddd if you want softer gray */
+  cursor: pointer;
+  transition: background 0.2s ease, transform 0.2s ease;
+}

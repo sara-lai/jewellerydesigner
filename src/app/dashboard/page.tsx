@@ -2,6 +2,7 @@ import { Flex, Text } from '@chakra-ui/react'
 
 import * as modelService from '@/services/modelService'
 import * as userService from '@/services/userService'
+import * as aiPhotoService from '@/services/aiPhotoService'
 import Dashboard from '@/components/Dashboard/Dashboard'
 
 // brainstorm
@@ -20,6 +21,9 @@ const DashboardPage = async () => {
     const allModels = await modelService.getModelsForCurrentUser(currentUser.clerk_id)
     const completedTraining = latestModel?.completedTraining
     const firstVisit = allModels.length === 1 && !completedTraining
+
+    // get images for current user (mainly for deleted & favourites)
+    await aiPhotoService.getPhotosForCurrentUser(currentUser.clerk_id)
 
     return (
       <>

@@ -11,6 +11,17 @@ const createAIPhoto = async (modelId: number, userId: string, imgUrl: string) =>
     return newPhoto
 }
 
+const getPhotosForCurrentUser = async (user_id: string) => {
+    const allPhotos = await prisma.aIPhoto.findMany({ 
+        where: { user_id: user_id }
+    })
+    return allPhotos  
+}
+// 
+
+// getFavouritesForUser
+
 export {
     createAIPhoto,
+    getPhotosForCurrentUser
 }
