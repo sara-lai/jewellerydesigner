@@ -3,7 +3,7 @@
 'use client'
 
 import { useState } from 'react'
-import { Box, Card, Flex, Spinner } from '@chakra-ui/react'
+import { Box, Card, Flex, Spinner, Text } from '@chakra-ui/react'
 import FeaturesPanel from './FeaturesPanel'
 
 import YourAIPhotos from './YourAIPhotos'
@@ -48,6 +48,29 @@ const Dashboard = ({ latestModel, allModels }) => {
             <Box flex="1" overflowY="auto" className="content-scroll" mb={20} pr={2}>  
                 <Box position="sticky" top={0} zIndex={10} bg='white'>
                     <TopBar />
+
+                    <Flex justify='space-evenly' pt={3} borderBottom='1px solid rgba(0,0,0,.1)'>
+                        <Box cursor='pointer' className={tab === 'public' ? 'active tab' : 'tab'} onClick={()=> setTab('public')}>
+                            <Text pl={4} pr={4}>
+                                Public Models
+                            </Text>
+                        </Box>
+                        <Box cursor='pointer' className={tab === 'all' ? 'active tab' : 'tab'} onClick={()=> setTab('all')}>
+                            <Text pl={4} pr={4}>
+                                Your AI Photos
+                            </Text>
+                        </Box>            
+                        <Box cursor='pointer' className={tab === 'favourites' ? 'active tab' : 'tab'} onClick={()=> setTab('favourites')}>
+                            <Text pl={4} pr={4}>
+                                Favourites
+                            </Text>
+                        </Box> 
+                        <Box pr={8} cursor='pointer' className={tab === 'deleted' ? 'active tab' : 'tab'} onClick={()=> setTab('deleted')}>
+                            <Text pl={4} pr={4}>
+                                Deleted
+                            </Text>
+                        </Box>                                    
+                    </Flex>                    
                 </Box>
                 <Box mx="auto">
                     {tab === 'all' && <YourAIPhotos loadingCards={loadingCards} currentModel={currentModel} />}
