@@ -112,7 +112,6 @@ const takePhotoWithModel = async (modelId: number, numPhotos: number, prompt: st
     }    
 }
 
-
 export {
     trainFirstModel,
     newModelSamples,
