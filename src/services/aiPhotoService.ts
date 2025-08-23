@@ -1,6 +1,7 @@
 import prisma from '@/lib/prisma'
 import { uploadImgToS3 } from '@/lib/s3'
 
+
 const createAIPhoto = async (modelId: number, userId: string, imgUrl: string) => {
     // add s3 upload 
     // get url back from s3
@@ -22,11 +23,22 @@ const getPhotosForCurrentUser = async (user_id: string) => {
     })
     return allPhotos  
 }
-// 
 
-// getFavouritesForUser
+const deleteAIPhoto = async (photoId, userId) => {
+    // brainstorm 
+    // todo - userId guard!
+    // hmm need a "trash section" where can restore, I guess like "hard" delete vs "soft" where can browse deleted
+    const deletedPhoto = await prisma.aIPhoto.delete({where: { id: photoId }})
+    console.log('deleted', deletedPhoto)
+}
+
+// todo
+const softDeleteAIPhoto = async (photoId, userId) => {
+}
 
 export {
     createAIPhoto,
-    getPhotosForCurrentUser
+    getPhotosForCurrentUser,
+    deleteAIPhoto,
+    softDelete
 }
