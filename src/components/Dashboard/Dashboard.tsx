@@ -20,14 +20,10 @@ const Dashboard = ({ latestModel, allModels }) => {
     const [loadingCards, setLoadingCards] = useState([])
     const [tab, setTab] = useState('all')
 
-    // todo 
-    // favourted = ... .filter by favourited = true 
-    // also need to .filter on main image section (to remove deleted)
-
     // evidentally can pass function to useState default; will this worK?
     const [deleted, setDeleted] = useState(currentModel.aiphotos.filter(photo => photo.deleted)) 
-
-    const [mainPhotos, setMainPhotos] = useState(currentModel.aiphotos)
+    const [favourites, setFavourites] = useState(currentModel.aiphotos.filter(photo => photo.favourited))
+    const [mainPhotos, setMainPhotos] = useState(currentModel.aiphotos)    
 
     function setNewPhotoUI(numPhotos: number){
         // argument is number of photos being generated/ number of cards to display
@@ -54,15 +50,32 @@ const Dashboard = ({ latestModel, allModels }) => {
         setMainPhotos(newMainPhotos)
 
         // ah can add to deleted here as well (for deleted tab)
-        const newlyDeleted = mainPhotos.filter(photo => photo.id === photoId)
+        const newlyDeleted = mainPhotos.find(photo => photo.id === photoId)
         setDeleted([...deleted, newlyDeleted])
+    }
+
+    function addToMainList(photoId){
+        // filter out of DELETED, then copy to main list
+        let theUnDeleted = deleted.find(photo => photo.id === photoId)    
+
+        // tmp solution, need to manually set deleted = false (since not synced with DB - todo)
+        theUnDeleted = { ...theUnDeleted, deleted: false }
+        setMainPhotos([theUnDeleted, ...mainPhotos])
+
+        // finally removing from deleted list, can re-use
+        removeFromDeleted(photoId)
+    }
+
+    function removeFromDeleted(photoId){
+        const newDeleted = deleted.filter(photo => photo.id !== photoId)
+        setDeleted(newDeleted)
     }
 
     // when currentModel changes, likewise change the favourites & deleted
     useEffect(() => {
         setDeleted(currentModel.aiphotos.filter(photo => photo.deleted))
+        setFavourites(currentModel.aiphotos.filter(photo => photo.favourited))
         setMainPhotos(currentModel.aiphotos)
-
     }, [currentModel])
 
 
@@ -100,8 +113,8 @@ const Dashboard = ({ latestModel, allModels }) => {
                 </Box>
                 <Box mx="auto">
                     {tab === 'all' && <YourAIPhotos loadingCards={loadingCards} photos={mainPhotos} removeFromMainList={removeFromMainList} />}
-                    {tab === 'favourites' && <Favourites />}
-                    {tab === 'deleted' && <Deleted photos={deleted} />}
+                    {tab === 'favourites' && <Favourites photos={favourites} />}
+                    {tab === 'deleted' && <Deleted photos={deleted} removeFromDeleted={removeFromDeleted} addToMainList={addToMainList} />}
                     {tab ==='public' && <PublicModels />}
                 </Box>
                 

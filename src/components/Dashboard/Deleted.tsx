@@ -1,14 +1,14 @@
 'use client'
 
 import { Box, SimpleGrid } from '@chakra-ui/react'
-import PhotoCard from './PhotoCard'
+import DeletedPhotoCard from './DeletedPhotoCard'
 
-const Deleted = ({ photos }) => {
+const Deleted = ({ photos, removeFromDeleted, addToMainList }) => {
     return (
         <Box mx="auto">
             <SimpleGrid columns={{ base: 1, sm: 2, md: 3, lg: 4 }} gap={4} mt={4}>
             {photos && photos.map((aiphoto, i) => (
-                <PhotoCard key={i} aiphoto={aiphoto} hardDelete={true} />
+                <DeletedPhotoCard key={i} aiphoto={aiphoto} removeFromDeleted={removeFromDeleted} addToMainList={addToMainList} />
             ))}         
             </SimpleGrid>
         </Box> 

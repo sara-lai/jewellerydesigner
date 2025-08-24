@@ -1,7 +1,6 @@
 import prisma from '@/lib/prisma'
 import { uploadImgToS3 } from '@/lib/s3'
 
-
 const createAIPhoto = async (modelId: number, userId: string, imgUrl: string) => {
     // add s3 upload 
     // get url back from s3
@@ -56,9 +55,25 @@ const softDeleteAIPhoto = async (photoId, userId) => {
     console.log('soft delete', softDeletedPhoto)
 }
 
+const unDeleteAIPhoto = async (photoId, userId) => {
+    // repeat logic deleteAIPhoto, but update boolean at end
+    const photo = await prisma.aIPhoto.findUnique({
+        where: { id: photoId },
+    })
+
+    // user validation not important here?
+
+    const unDeletedPhoto = await prisma.aIPhoto.update({
+        where: { id: photoId }, 
+        data: { deleted: false }
+    })
+    console.log('undeleted photo', unDeletedPhoto)
+}
+
 export {
     createAIPhoto,
     getPhotosForCurrentUser,
     deleteAIPhoto,
     softDeleteAIPhoto,
+    unDeleteAIPhoto
 }

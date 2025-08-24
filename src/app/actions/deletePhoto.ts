@@ -16,3 +16,8 @@ export async function softDeletePhoto(photoId: number) {
     const currentUser = await userService.currentUser()
     return await aiPhotoService.softDeleteAIPhoto(photoId, currentUser.clerk_id)
 }
+
+export async function unDeletePhoto(photoId: number) {
+    const currentUser = await userService.currentUser()
+    return await aiPhotoService.unDeleteAIPhoto(photoId, currentUser.clerk_id)
+}

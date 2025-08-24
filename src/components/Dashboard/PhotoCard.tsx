@@ -6,18 +6,14 @@ import { faTrashCan, faHeart } from '@fortawesome/free-regular-svg-icons'
 import { FiDownload, FiMaximize2 } from 'react-icons/fi'
 import '@/app/dashboard/dashboard.css'
 import { softDeletePhoto, deletePhoto } from '@/app/actions/deletePhoto'
+import { favouritePhoto } from "@/app/actions/favouritePhoto"
 
-const PhotoCard = ({ aiphoto, hardDelete, removeFromMainList }) => {
+const PhotoCard = ({ aiphoto, removeFromMainList }) => {
     const [showOverlay, setShowOverlay] = useState(false)
 
-    // trying to make this usable for both hard and soft deletes
-    function decideDelete(photoId){
-        if (hardDelete){
-            deletePhoto(photoId)
-        } else {
-            softDeletePhoto(photoId)
-            removeFromMainList(photoId)
-        }
+    function handleDelete(photoId){
+        softDeletePhoto(photoId)
+        removeFromMainList(photoId)
     }
 
     return (
@@ -29,8 +25,8 @@ const PhotoCard = ({ aiphoto, hardDelete, removeFromMainList }) => {
                 <Box position='absolute' h='100%' w='100%' p={4} bg='rgba(0,0,0,0.4)' zIndex='1' cursor='pointer'>
                     <Box>
                         <Flex justify='space-between'>
-                            <FontAwesomeIcon color='white' icon={faTrashCan} size="2xl" style={{ maxHeight: '30px'}} onClick={() => decideDelete(aiphoto.id)} />                            
-                            <FontAwesomeIcon color='white' icon={faHeart} size="2xl" style={{ maxHeight: '30px'}} />                        
+                            <FontAwesomeIcon color='white' icon={faTrashCan} size="2xl" style={{ maxHeight: '30px'}} onClick={() => handleDelete(aiphoto.id)} />                            
+                            <FontAwesomeIcon color='white' icon={faHeart} size="2xl" style={{ maxHeight: '30px'}} onClick={() => favouritePhoto(aiphoto.id)}/>                        
                         </Flex>
                         <Box mt='20%'>
                             <Flex justify='center' align='center' gap={6}>
