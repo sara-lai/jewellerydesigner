@@ -5,10 +5,21 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faTrashCan, faHeart } from '@fortawesome/free-regular-svg-icons'
 import { FiDownload, FiMaximize2 } from 'react-icons/fi'
 import '@/app/dashboard/dashboard.css'
-import deletePhoto from '@/app/actions/deletePhoto'
+import { softDeletePhoto, deletePhoto } from '@/app/actions/deletePhoto'
 
-const PhotoCard = ({ aiphoto }) => {
+const PhotoCard = ({ aiphoto, hardDelete, removeFromMainList }) => {
     const [showOverlay, setShowOverlay] = useState(false)
+
+    // trying to make this usable for both hard and soft deletes
+    function decideDelete(photoId){
+        if (hardDelete){
+            deletePhoto(photoId)
+        } else {
+            softDeletePhoto(photoId)
+            removeFromMainList(photoId)
+        }
+    }
+
     return (
         <Box position='relative' borderRadius='6px' overflow='hidden'
             onMouseEnter={() => setShowOverlay(true)} 
@@ -18,7 +29,7 @@ const PhotoCard = ({ aiphoto }) => {
                 <Box position='absolute' h='100%' w='100%' p={4} bg='rgba(0,0,0,0.4)' zIndex='1' cursor='pointer'>
                     <Box>
                         <Flex justify='space-between'>
-                            <FontAwesomeIcon color='white' icon={faTrashCan} size="2xl" style={{ maxHeight: '30px'}} onClick={() => deletePhoto(aiphoto.id)} />                            
+                            <FontAwesomeIcon color='white' icon={faTrashCan} size="2xl" style={{ maxHeight: '30px'}} onClick={() => decideDelete(aiphoto.id)} />                            
                             <FontAwesomeIcon color='white' icon={faHeart} size="2xl" style={{ maxHeight: '30px'}} />                        
                         </Flex>
                         <Box mt='20%'>

@@ -25,20 +25,40 @@ const getPhotosForCurrentUser = async (user_id: string) => {
 }
 
 const deleteAIPhoto = async (photoId, userId) => {
-    // brainstorm 
-    // todo - userId guard!
-    // hmm need a "trash section" where can restore, I guess like "hard" delete vs "soft" where can browse deleted
+    const photo = await prisma.aIPhoto.findUnique({
+        where: { id: photoId },
+    })
+
+    // security
+    if (photo.user_id !== userId) {
+        throw new Error("Unauthorized hard deletion!")
+    }
+
     const deletedPhoto = await prisma.aIPhoto.delete({where: { id: photoId }})
     console.log('deleted', deletedPhoto)
 }
 
-// todo
 const softDeleteAIPhoto = async (photoId, userId) => {
+    // repeat logic deleteAIPhoto, but update boolean at end
+    const photo = await prisma.aIPhoto.findUnique({
+        where: { id: photoId },
+    })
+
+    // security
+    if (photo.user_id !== userId) {
+        throw new Error("Unauthorized soft deletion!")
+    }
+
+    const softDeletedPhoto = await prisma.aIPhoto.update({
+        where: { id: photoId }, 
+        data: { deleted: true }
+    })
+    console.log('soft delete', softDeletedPhoto)
 }
 
 export {
     createAIPhoto,
     getPhotosForCurrentUser,
     deleteAIPhoto,
-    softDelete
+    softDeleteAIPhoto,
 }

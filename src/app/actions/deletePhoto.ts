@@ -7,7 +7,12 @@
 import * as aiPhotoService from '@/services/aiPhotoService'
 import * as userService from '@/services/userService'
 
-export default async function deletePhoto(photoId: number) {
+export async function deletePhoto(photoId: number) {
     const currentUser = await userService.currentUser()
     return await aiPhotoService.deleteAIPhoto(photoId, currentUser.clerk_id)
+}
+
+export async function softDeletePhoto(photoId: number) {
+    const currentUser = await userService.currentUser()
+    return await aiPhotoService.softDeleteAIPhoto(photoId, currentUser.clerk_id)
 }

@@ -23,6 +23,7 @@ const DashboardPage = async () => {
     const firstVisit = allModels.length === 1 && !completedTraining
 
     // get images for current user (mainly for deleted & favourites)
+    // or do this on a per model basis?
     await aiPhotoService.getPhotosForCurrentUser(currentUser.clerk_id)
 
     return (

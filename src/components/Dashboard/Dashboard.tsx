@@ -2,7 +2,7 @@
 // needing to move former dashboard layout.tsx stuff here
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { Box, Card, Flex, Spinner, Text } from '@chakra-ui/react'
 import FeaturesPanel from './FeaturesPanel'
 
@@ -19,6 +19,15 @@ const Dashboard = ({ latestModel, allModels }) => {
     const [currentModel, setCurrentModel] = useState({...latestModel})
     const [loadingCards, setLoadingCards] = useState([])
     const [tab, setTab] = useState('all')
+
+    // todo 
+    // favourted = ... .filter by favourited = true 
+    // also need to .filter on main image section (to remove deleted)
+
+    // evidentally can pass function to useState default; will this worK?
+    const [deleted, setDeleted] = useState(currentModel.aiphotos.filter(photo => photo.deleted)) 
+
+    const [mainPhotos, setMainPhotos] = useState(currentModel.aiphotos)
 
     function setNewPhotoUI(numPhotos: number){
         // argument is number of photos being generated/ number of cards to display
@@ -39,6 +48,23 @@ const Dashboard = ({ latestModel, allModels }) => {
         }
         setLoadingCards(cards)
     }
+
+    function removeFromMainList(photoId){
+        const newMainPhotos = mainPhotos.filter(photo => photo.id !== photoId)        
+        setMainPhotos(newMainPhotos)
+
+        // ah can add to deleted here as well (for deleted tab)
+        const newlyDeleted = mainPhotos.filter(photo => photo.id === photoId)
+        setDeleted([...deleted, newlyDeleted])
+    }
+
+    // when currentModel changes, likewise change the favourites & deleted
+    useEffect(() => {
+        setDeleted(currentModel.aiphotos.filter(photo => photo.deleted))
+        setMainPhotos(currentModel.aiphotos)
+
+    }, [currentModel])
+
 
     return (
         <Flex className='dashboard-container' mx="auto" h="100vh">
@@ -73,9 +99,9 @@ const Dashboard = ({ latestModel, allModels }) => {
                     </Flex>                    
                 </Box>
                 <Box mx="auto">
-                    {tab === 'all' && <YourAIPhotos loadingCards={loadingCards} currentModel={currentModel} />}
+                    {tab === 'all' && <YourAIPhotos loadingCards={loadingCards} photos={mainPhotos} removeFromMainList={removeFromMainList} />}
                     {tab === 'favourites' && <Favourites />}
-                    {tab === 'deleted' && <Deleted />}
+                    {tab === 'deleted' && <Deleted photos={deleted} />}
                     {tab ==='public' && <PublicModels />}
                 </Box>
                 
