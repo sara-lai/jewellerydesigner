@@ -9,20 +9,18 @@ import { FiRotateCcw } from 'react-icons/fi'
 import '@/app/dashboard/dashboard.css'
 import { deletePhoto, unDeletePhoto } from '@/app/actions/deletePhoto'
 
-const DeletedPhotoCard = ({ aiphoto, removeFromDeleted, addToMainList }) => {
+const DeletedPhotoCard = ({ aiphoto, removeFromDeleted, addToMainListUnDelete }) => {
     const [showOverlay, setShowOverlay] = useState(false)
-
-    // todo - "undelete" feature
 
     function handleDelete(photoId){
         // both call server action & then removeFromDeleted
-        deletePhoto(photoId)
+        deletePhoto(photoId) // hard delete
         removeFromDeleted(photoId)
     }
 
     function handleUnDelete(photoId){
         unDeletePhoto(photoId)
-        addToMainList(photoId)
+        addToMainListUnDelete(photoId)
     }
 
     return (

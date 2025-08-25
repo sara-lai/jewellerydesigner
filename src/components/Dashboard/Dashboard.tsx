@@ -54,7 +54,7 @@ const Dashboard = ({ latestModel, allModels }) => {
         setDeleted([...deleted, newlyDeleted])
     }
 
-    function addToMainList(photoId){
+    function addToMainListUnDelete(photoId){
         // filter out of DELETED, then copy to main list
         let theUnDeleted = deleted.find(photo => photo.id === photoId)    
 
@@ -64,6 +64,22 @@ const Dashboard = ({ latestModel, allModels }) => {
 
         // finally removing from deleted list, can re-use
         removeFromDeleted(photoId)
+    }
+
+    function addToFavouritesList(photoId){
+        console.log('addToFavouritesList', photoId)
+        let newFavourited = mainPhotos.find(photo => photo.id === photoId)
+        console.log('theobj', newFavourited)
+
+        // similar to db situation, tmp solution until sync with db properly - todo
+        newFavourited = { ...newFavourited, favourited: true}
+
+        setFavourites([newFavourited, ...favourites])
+    }
+
+    function removeFromFavouritesList(photoId){
+        const newFavourites = favourites.filter(photo => photo.id !== photoId)
+        setFavourites(newFavourites)
     }
 
     function removeFromDeleted(photoId){
@@ -112,9 +128,9 @@ const Dashboard = ({ latestModel, allModels }) => {
                     </Flex>                    
                 </Box>
                 <Box mx="auto">
-                    {tab === 'all' && <YourAIPhotos loadingCards={loadingCards} photos={mainPhotos} removeFromMainList={removeFromMainList} />}
-                    {tab === 'favourites' && <Favourites photos={favourites} />}
-                    {tab === 'deleted' && <Deleted photos={deleted} removeFromDeleted={removeFromDeleted} addToMainList={addToMainList} />}
+                    {tab === 'all' && <YourAIPhotos loadingCards={loadingCards} photos={mainPhotos} removeFromMainList={removeFromMainList} addToFavouritesList={addToFavouritesList} />}
+                    {tab === 'favourites' && <Favourites photos={favourites} removeFromFavouritesList={removeFromFavouritesList} />}
+                    {tab === 'deleted' && <Deleted photos={deleted} removeFromDeleted={removeFromDeleted} addToMainListUnDelete={addToMainListUnDelete} />}
                     {tab ==='public' && <PublicModels />}
                 </Box>
                 

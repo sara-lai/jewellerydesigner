@@ -70,10 +70,49 @@ const unDeleteAIPhoto = async (photoId, userId) => {
     console.log('undeleted photo', unDeletedPhoto)
 }
 
+const favouritePhoto = async (photoId, userId) => {
+    // repeat logic deleteAIPhoto, but update boolean at end
+    const photo = await prisma.aIPhoto.findUnique({
+        where: { id: photoId },
+    })
+
+    // security
+    if (photo.user_id !== userId) {
+        throw new Error("Unauthorized favouriting!")
+    }
+
+    const favouritedPhoto = await prisma.aIPhoto.update({
+        where: { id: photoId }, 
+        data: { favourited: true }
+    })
+    console.log('favourited', favouritedPhoto)
+}
+
+const unFavouritePhoto = async (photoId, userId) => {
+    // repeat logic deleteAIPhoto, but update boolean at end
+    const photo = await prisma.aIPhoto.findUnique({
+        where: { id: photoId },
+    })
+
+    // security
+    if (photo.user_id !== userId) {
+        throw new Error("Unauthorized unfavouriting!")
+    }
+
+    const unFavouritedPhoto = await prisma.aIPhoto.update({
+        where: { id: photoId }, 
+        data: { favourited: false }
+    })
+    console.log('favourited', unFavouritedPhoto)
+}
+
+
 export {
     createAIPhoto,
     getPhotosForCurrentUser,
     deleteAIPhoto,
     softDeleteAIPhoto,
-    unDeleteAIPhoto
+    unDeleteAIPhoto,
+    favouritePhoto,   
+    unFavouritePhoto
 }

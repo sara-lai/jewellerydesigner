@@ -6,14 +6,27 @@ import { faTrashCan, faHeart } from '@fortawesome/free-regular-svg-icons'
 import { FiDownload, FiMaximize2 } from 'react-icons/fi'
 import '@/app/dashboard/dashboard.css'
 import { softDeletePhoto, deletePhoto } from '@/app/actions/deletePhoto'
-import { favouritePhoto } from "@/app/actions/favouritePhoto"
+import { favouritePhoto, unFavouritePhoto } from "@/app/actions/favouritePhoto"
 
-const PhotoCard = ({ aiphoto, removeFromMainList }) => {
+const PhotoCard = ({ aiphoto, removeFromMainList, addToFavouritesList, removeFromFavouritesList }) => {
     const [showOverlay, setShowOverlay] = useState(false)
+
+    // todo - realising i can have simpler logic.... (i have aiphoto already)
+    // oh dear, refactor
 
     function handleDelete(photoId){
         softDeletePhoto(photoId)
         removeFromMainList(photoId)
+    }
+
+    function handleFavourite(photoId){
+        if (aiphoto.favourited){ // will this always be updated/synced with db?
+            unFavouritePhoto(photoId)
+            removeFromFavouritesList(photoId)
+        } else {
+            favouritePhoto(photoId)
+            addToFavouritesList(photoId)
+        }        
     }
 
     return (
@@ -26,7 +39,7 @@ const PhotoCard = ({ aiphoto, removeFromMainList }) => {
                     <Box>
                         <Flex justify='space-between'>
                             <FontAwesomeIcon color='white' icon={faTrashCan} size="2xl" style={{ maxHeight: '30px'}} onClick={() => handleDelete(aiphoto.id)} />                            
-                            <FontAwesomeIcon color='white' icon={faHeart} size="2xl" style={{ maxHeight: '30px'}} onClick={() => favouritePhoto(aiphoto.id)}/>                        
+                            <FontAwesomeIcon color='white' icon={faHeart} size="2xl" style={{ maxHeight: '30px'}} onClick={() => handleFavourite(aiphoto.id)}/>                        
                         </Flex>
                         <Box mt='20%'>
                             <Flex justify='center' align='center' gap={6}>
