@@ -33,9 +33,9 @@ const DeletedPhotoCard = ({ aiphoto, removeFromDeleted, addToMainListUnDelete })
                     <Box mt='20%'>
                         <Flex justify='center' align='center' gap={6}>
                             <Flex direction='column' align='center'>
-                                <div className='icon-circle'>
-                                    <FontAwesomeIcon color='white' icon={faTrashCan} size="2xl" style={{ maxHeight: '30px'}} onClick={() => handleDelete(aiphoto.id)} />                            
-                                </div>
+                                <Box className='icon-circle' border='2px solid red'>
+                                    <FontAwesomeIcon color='red' icon={faTrashCan} size="2xl" style={{ maxHeight: '30px'}} onClick={() => handleDelete(aiphoto.id)} />                            
+                                </Box>
                                 <Text fontSize='.8rem' color='white'>permanent delete</Text>
                             </Flex>
                             <Flex direction='column' align='center'>

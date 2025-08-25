@@ -15,6 +15,11 @@ const PhotoCard = ({ aiphoto, removeFromMainList, addToFavouritesList, removeFro
     // oh dear, refactor
 
     function handleDelete(photoId){
+        if (aiphoto.favourited){
+            console.log('deleting a favourite? wont do')
+            return
+        }
+
         softDeletePhoto(photoId)
         removeFromMainList(photoId)
     }
@@ -50,10 +55,12 @@ const PhotoCard = ({ aiphoto, removeFromMainList, addToFavouritesList, removeFro
                                     <Text fontSize='.8rem' color='white'>view</Text>
                                 </Flex>
                                 <Flex direction='column'>
-                                    <div className='icon-circle'>
-                                        <FiDownload className='fi-icon-thicken' color="gray.700" size="1.5rem" />
-                                    </div>
-                                    <Text fontSize='.8rem' color='white'>download</Text>
+                                    <a href={aiphoto.url} download target="_blank" rel="noopener noreferrer">
+                                        <div className='icon-circle'>
+                                            <FiDownload className='fi-icon-thicken' color="gray.700" size="1.5rem" />
+                                        </div>
+                                        <Text fontSize='.8rem' color='white'>download</Text>
+                                    </a>
                                 </Flex>
                             </Flex>
                         </Box>                        
