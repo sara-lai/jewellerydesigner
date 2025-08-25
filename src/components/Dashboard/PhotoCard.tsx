@@ -7,9 +7,12 @@ import { FiDownload, FiMaximize2 } from 'react-icons/fi'
 import '@/app/dashboard/dashboard.css'
 import { softDeletePhoto, deletePhoto } from '@/app/actions/deletePhoto'
 import { favouritePhoto, unFavouritePhoto } from "@/app/actions/favouritePhoto"
+import { CloseButton, Dialog, Portal } from "@chakra-ui/react"
+// discovering chakra v3 modals VERY different from v2s
 
 const PhotoCard = ({ aiphoto, removeFromMainList, addToFavouritesList, removeFromFavouritesList }) => {
     const [showOverlay, setShowOverlay] = useState(false)
+    const [open, setOpen] = useState(false) // modals
 
     // todo - realising i can have simpler logic.... (i have aiphoto already)
     // oh dear, refactor
@@ -49,10 +52,12 @@ const PhotoCard = ({ aiphoto, removeFromMainList, addToFavouritesList, removeFro
                         <Box mt='20%'>
                             <Flex justify='center' align='center' gap={6}>
                                 <Flex direction='column'>
-                                    <div className='icon-circle'>
-                                        <FiMaximize2 className='fi-icon-thicken' color="gray.700" size="1.5rem" />
-                                    </div>
-                                    <Text fontSize='.8rem' color='white'>view</Text>
+                                    <Box onClick={() => setOpen(true)}>
+                                        <div className='icon-circle'>
+                                            <FiMaximize2 className='fi-icon-thicken' color="gray.700" size="1.5rem" />
+                                        </div>
+                                        <Text fontSize='.8rem' color='white'>view</Text>
+                                    </Box>
                                 </Flex>
                                 <Flex direction='column'>
                                     <a href={aiphoto.url} download target="_blank" rel="noopener noreferrer">
@@ -67,7 +72,26 @@ const PhotoCard = ({ aiphoto, removeFromMainList, addToFavouritesList, removeFro
                     </Box>
                 </Box> 
             )}
-            <Image src={aiphoto.url} />
+            <Image src={aiphoto.url} />    
+
+            {/* https://www.chakra-ui.com/docs/components/dialog */}
+            <Dialog.Root size="full" motionPreset="slide-in-bottom" lazyMount open={open} onOpenChange={(e) => setOpen(e.open)}>
+                <Portal>
+                    <Dialog.Backdrop />
+                    <Dialog.Positioner>
+                        <Dialog.Content>
+                            <Dialog.Body>
+                                <Flex justify='center'>
+                                    <Image src={aiphoto.url} />
+                                </Flex>
+                            </Dialog.Body>
+                            <Dialog.CloseTrigger asChild>
+                                <CloseButton size="sm" />
+                            </Dialog.CloseTrigger>
+                        </Dialog.Content>
+                    </Dialog.Positioner>
+                </Portal>
+            </Dialog.Root>                 
         </Box>
     )
 }
