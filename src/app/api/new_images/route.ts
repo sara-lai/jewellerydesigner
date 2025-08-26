@@ -5,6 +5,15 @@ import { validateWebhook } from 'replicate';
 import * as modelService from '@/services/modelService'
 import * as aiPhotoService from '@/services/aiPhotoService'
 
+// when new image ready, refresh using pusher
+import Pusher from 'pusher'
+const pusher = new Pusher({
+    appId: process.env.PUSHER_APP_ID,
+    key: process.env.PUSHER_KEY,
+    secret: process.env.PUSHER_SECRET,
+    cluster: process.env.PUSHER_CLUSTER,
+})
+
 // note
 // docs give warning about multiple webhook requests possible
 
@@ -53,7 +62,13 @@ export async function POST(request: Request) {
         }
 
         // more integration points.... possibly 
-        // e.g. credits.... 
+        // e.g. credits....  a userService.minusCredits.... 
+ 
+        // simplest test to trigger refresh 
+        // await?
+        pusher.trigger(`new-image`, 'new-image', {}) // later change to actual img object?
+        console.log('just did pusher')
+
     } else {
         console.log('model img sample generation unexpected status.... better do something')
     }

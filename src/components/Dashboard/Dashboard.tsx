@@ -2,7 +2,8 @@
 // needing to move former dashboard layout.tsx stuff here
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
+import { useRouter } from 'next/navigation'
 import { Box, Card, Flex, Spinner, Text } from '@chakra-ui/react'
 import FeaturesPanel from './FeaturesPanel'
 
@@ -14,16 +15,20 @@ import TopBar from './TopBar'
 
 import '@/app/dashboard/dashboard.css'
 
-const Dashboard = ({ latestModel, allModels }) => {
+import Pusher from 'pusher-js'
 
+const Dashboard = ({ latestModel, allModels }) => {
     const [currentModel, setCurrentModel] = useState({...latestModel})
     const [loadingCards, setLoadingCards] = useState([])
     const [tab, setTab] = useState('all')
+    const router = useRouter()
 
     // evidentally can pass function to useState default; will this worK?
     const [deleted, setDeleted] = useState(currentModel.aiphotos.filter(photo => photo.deleted)) 
     const [favourites, setFavourites] = useState(currentModel.aiphotos.filter(photo => photo.favourited))
     const [mainPhotos, setMainPhotos] = useState(currentModel.aiphotos)    
+
+    const pusherRef = useRef(null)
 
     function setNewPhotoUI(numPhotos: number){
         // argument is number of photos being generated/ number of cards to display
@@ -93,6 +98,24 @@ const Dashboard = ({ latestModel, allModels }) => {
         setFavourites(currentModel.aiphotos.filter(photo => photo.favourited))
         setMainPhotos(currentModel.aiphotos)
     }, [currentModel])
+
+    // simplest usage of pusher, get a signal and refresh
+    useEffect(() => {
+        if (!pusherRef.current) { // make sure pusher only 1 init
+            pusherRef.current = new Pusher(process.env.NEXT_PUBLIC_PUSHER_KEY, { cluster: 'ap1' });
+        }
+        const pusher = pusherRef.current
+        console.log('here with pusher', pusher)
+        const channel = pusher.subscribe('new-image')        
+        channel.bind('new-image', (data) => {
+            console.log('pusher with data', data)
+            router.refresh()
+        })
+        // return () => {    // necessary?
+        //     channel.unbind('new-image')
+        //     pusher.unsubscribe('new-image')
+        // }        
+    }, [])      
 
 
     return (
