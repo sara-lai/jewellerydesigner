@@ -9,9 +9,8 @@ import { FiSettings, FiShuffle, FiTerminal } from 'react-icons/fi'
 import { takePhotoWithModel } from '@/lib/replicate'
 import runNewImages from '@/app/actions/runNewImages'
 
-const FeaturesPanel = ({ allModels, currentModel, setCurrentModel, setNewPhotoUI }) => {
+const FeaturesPanel = ({ allModels, currentModel, setCurrentModel, setNewPhotoUI, isDisabled, setIsDisabled }) => {
     const router = useRouter()
-    const [isDisabled, setIsDisabled] = useState(false)
     const [prompt, setPrompt] = useState("")
 
     function switchModel(modelId){
@@ -33,8 +32,7 @@ const FeaturesPanel = ({ allModels, currentModel, setCurrentModel, setNewPhotoUI
 
         // disable button & clear prompt
         setIsDisabled(true)
-
-        // somehow when back end is done, need to load the images, and undisable form
+        setPrompt("")
     }
 
     return (

@@ -1,12 +1,8 @@
-// will try this component as main parent for all the dashbhoard things, state, etc. 
-// needing to move former dashboard layout.tsx stuff here
 'use client'
 
 import { useState, useEffect, useRef } from 'react'
-import { useRouter } from 'next/navigation'
 import { Box, Card, Flex, Spinner, Text } from '@chakra-ui/react'
 import FeaturesPanel from './FeaturesPanel'
-
 import YourAIPhotos from './YourAIPhotos'
 import Favourites from './Favourites'
 import Deleted from './Deleted'
@@ -21,19 +17,21 @@ const Dashboard = ({ latestModel, allModels }) => {
     const [currentModel, setCurrentModel] = useState({...latestModel})
     const [loadingCards, setLoadingCards] = useState([])
     const [tab, setTab] = useState('all')
-    const router = useRouter()
-
-    // evidentally can pass function to useState default; will this worK?
-    const [deleted, setDeleted] = useState(currentModel.aiphotos.filter(photo => photo.deleted)) 
-    const [favourites, setFavourites] = useState(currentModel.aiphotos.filter(photo => photo.favourited))
+    const [isDisabled, setIsDisabled] = useState(false) // previously in FeaturesPanel (to control form)
     const [mainPhotos, setMainPhotos] = useState(currentModel.aiphotos)    
 
-    const pusherRef = useRef(null)
+    const deletedPhotos = currentModel.aiphotos.filter(photo => photo.deleted)
+    const [deleted, setDeleted] = useState(deletedPhotos)
+
+    const favouritePhotos = currentModel.aiphotos.filter(photo => photo.favourited)
+    const [favourites, setFavourites] = useState(favouritePhotos)
+
+    const pusherRef = useRef(null) // useRef to prevent lots of inits
 
     function setNewPhotoUI(numPhotos: number){
         // argument is number of photos being generated/ number of cards to display
 
-        // todo - loading spinners & counters
+        // todo - add counter - probably setInterval/ useEffect... new file probably
         const PhotoCardSkeleton = () => (
             <Card.Root minH='300px'minW='250px' boxShadow="md">
                 <Card.Body p={2}>
@@ -92,36 +90,42 @@ const Dashboard = ({ latestModel, allModels }) => {
         setDeleted(newDeleted)
     }
 
-    // when currentModel changes, likewise change the favourites & deleted
+    // when currentModel changes, set all relevant state vars
     useEffect(() => {
+        // brainstorm
+        // todo - stale photo issue with pusher
+        // when current model changes, also use server action & get currentModel from DB, keep in-sync
+        // good place for loading skeletons.... 
+        // make this async 
+
         setDeleted(currentModel.aiphotos.filter(photo => photo.deleted))
         setFavourites(currentModel.aiphotos.filter(photo => photo.favourited))
         setMainPhotos(currentModel.aiphotos)
     }, [currentModel])
 
-    // simplest usage of pusher, get a signal and refresh
     useEffect(() => {
         if (!pusherRef.current) { // make sure pusher only 1 init
-            pusherRef.current = new Pusher(process.env.NEXT_PUBLIC_PUSHER_KEY, { cluster: 'ap1' });
+            pusherRef.current = new Pusher(process.env.NEXT_PUBLIC_PUSHER_KEY, { cluster: process.env.NEXT_PUBLIC_PUSHER_CLUSTER })
         }
         const pusher = pusherRef.current
-        console.log('here with pusher', pusher)
-        const channel = pusher.subscribe('new-image')        
+        const channel = pusher.subscribe(`new-image-${currentModel.id}`)        
         channel.bind('new-image', (data) => {
-            console.log('pusher with data', data)
-            router.refresh()
+            setMainPhotos(prev => [data.photo, ...prev]) // solution: without prev weird state issues (simultaneous pusher messages)
+            setLoadingCards([]) // todo - remove cards one at a time?
+            setIsDisabled(false) // free-up form in FeaturesPanel
         })
-        // return () => {    // necessary?
-        //     channel.unbind('new-image')
-        //     pusher.unsubscribe('new-image')
-        // }        
-    }, [])      
-
+        return () => {    // clean up or can get duplicates
+            channel.unbind('new-image')
+            pusher.unsubscribe(`new-image-${currentModel.id}`)
+        }        
+    }, [currentModel])      
 
     return (
         <Flex className='dashboard-container' mx="auto" h="100vh">
             <Box width="380px" pt={0}>  
-                <FeaturesPanel setNewPhotoUI={setNewPhotoUI} allModels={allModels} currentModel={currentModel} setCurrentModel={setCurrentModel} />
+                <FeaturesPanel setNewPhotoUI={setNewPhotoUI} allModels={allModels} currentModel={currentModel} 
+                    setCurrentModel={setCurrentModel} isDisabled={isDisabled} setIsDisabled={setIsDisabled} 
+                />
             </Box>
             <Box flex="1" overflowY="auto" className="content-scroll" mb={20} pr={2}>  
                 <Box position="sticky" top={0} zIndex={10} bg='white'>
@@ -156,7 +160,6 @@ const Dashboard = ({ latestModel, allModels }) => {
                     {tab === 'deleted' && <Deleted photos={deleted} removeFromDeleted={removeFromDeleted} addToMainListUnDelete={addToMainListUnDelete} />}
                     {tab ==='public' && <PublicModels />}
                 </Box>
-                
             </Box>
       </Flex>
     ) 
@@ -164,16 +167,3 @@ const Dashboard = ({ latestModel, allModels }) => {
 }
 
 export default Dashboard
-
-// graveyard, placeholders
-// const PhotoCardSkeleton = () => (
-//   <Card.Root minH='300px'minW='250px' boxShadow="md">
-//     <Card.Body p={2}>
-//       <Skeleton h="100%" w="100%" borderRadius="md" />
-//     </Card.Body>
-//   </Card.Root>
-// )
-//   const placeholders = []
-//   for (let i = 0; i < 12; i++){
-//       placeholders.push(<PhotoCardSkeleton key={i} />)
-//   }

@@ -58,16 +58,12 @@ export async function POST(request: Request) {
 
         for (let newUrl of newUrls) {
             const aiphoto = await aiPhotoService.createAIPhoto(model.id, model.user_id, newUrl)
-            console.log('create photo', aiphoto)
+            console.log('create photo & pusher', aiphoto)
+            pusher.trigger(`new-image-${model.id}`, 'new-image', { photo: aiphoto })
         }
 
         // more integration points.... possibly 
         // e.g. credits....  a userService.minusCredits.... 
- 
-        // simplest test to trigger refresh 
-        // await?
-        pusher.trigger(`new-image`, 'new-image', {}) // later change to actual img object?
-        console.log('just did pusher')
 
     } else {
         console.log('model img sample generation unexpected status.... better do something')
