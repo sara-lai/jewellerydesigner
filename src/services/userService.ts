@@ -6,7 +6,7 @@ import prisma from '@/lib/prisma'
 const currentUser = async () => {
     const { userId } = await auth()
     if (!userId) {
-        console.log('No Clerk session found uhoh')
+        console.log('No Clerk session found')
         return null
     }
     const user = await prisma.user.findUnique({ where: { clerk_id: userId } });

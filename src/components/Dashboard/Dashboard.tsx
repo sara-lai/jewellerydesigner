@@ -8,10 +8,10 @@ import Favourites from './Favourites'
 import Deleted from './Deleted'
 import PublicModels from './PublicModels'
 import TopBar from './TopBar'
+import getModelSecurely from '@/app/actions/getModelSecurely'
+import Pusher from 'pusher-js'
 
 import '@/app/dashboard/dashboard.css'
-
-import Pusher from 'pusher-js'
 
 const Dashboard = ({ latestModel, allModels }) => {
     const [currentModel, setCurrentModel] = useState({...latestModel})
@@ -90,17 +90,19 @@ const Dashboard = ({ latestModel, allModels }) => {
         setDeleted(newDeleted)
     }
 
-    // when currentModel changes, set all relevant state vars
-    useEffect(() => {
-        // brainstorm
-        // todo - stale photo issue with pusher
-        // when current model changes, also use server action & get currentModel from DB, keep in-sync
-        // good place for loading skeletons.... 
-        // make this async 
+    async function updateStateOnModelChange(){
+        // using server action to keep images in sync with db (pusher only updates states vars)
+        // todo - loading skeletons.... ?
 
-        setDeleted(currentModel.aiphotos.filter(photo => photo.deleted))
-        setFavourites(currentModel.aiphotos.filter(photo => photo.favourited))
-        setMainPhotos(currentModel.aiphotos)
+        const refreshedModel = await getModelSecurely(currentModel.id)  
+        console.log('got refreshed model', refreshedModel)       
+        setDeleted(refreshedModel.aiphotos.filter(photo => photo.deleted))
+        setFavourites(refreshedModel.aiphotos.filter(photo => photo.favourited))
+        setMainPhotos(refreshedModel.aiphotos)
+    }
+
+    useEffect(() => {
+        updateStateOnModelChange()
     }, [currentModel])
 
     useEffect(() => {

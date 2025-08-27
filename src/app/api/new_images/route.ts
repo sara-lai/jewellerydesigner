@@ -5,7 +5,6 @@ import { validateWebhook } from 'replicate';
 import * as modelService from '@/services/modelService'
 import * as aiPhotoService from '@/services/aiPhotoService'
 
-// when new image ready, refresh using pusher
 import Pusher from 'pusher'
 const pusher = new Pusher({
     appId: process.env.PUSHER_APP_ID,
@@ -14,8 +13,6 @@ const pusher = new Pusher({
     cluster: process.env.PUSHER_CLUSTER,
 })
 
-// note
-// docs give warning about multiple webhook requests possible
 
 export async function POST(request: Request) {
     // retreive the right model 

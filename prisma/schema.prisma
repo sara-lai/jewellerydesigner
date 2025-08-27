@@ -9,7 +9,7 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-// maybe move into models/user, express-like, and import into here?
+// todo - maybe add reference with models for currentUser.mlmodels 
 model User {
   id            Int      @id @default(autoincrement())
   clerk_id      String   @unique
@@ -47,7 +47,6 @@ model MLModel {
   aiphotos          AIPhoto[]
 }
 
-// trying full reference
 // todo - maybe full reference with user too ? for "all photos"
 model AIPhoto {
   id         Int      @id @default(autoincrement())
@@ -60,5 +59,3 @@ model AIPhoto {
   createdAt  DateTime @default(now())
   updatedAt  DateTime @updatedAt
 }
-
-// import * from "./../src/models/user.prisma" (alternate approach to use /models)

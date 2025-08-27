@@ -17,8 +17,21 @@ const updateModel = async (modelId: number, data: Prisma.MLModelUpdateInput) => 
     return updatedModel    
 }
 
+// this version is for webhooks (no current user)
 const getModelById = async(modelId: number) => {
     const model = await prisma.mLModel.findUnique({ where: { id: modelId } });
+    return model
+}
+
+const getModelByIdSecure = async(modelId: number, userId: string) => {
+    const model = await prisma.mLModel.findUnique({ 
+        where: { id: modelId },
+        include: { aiphotos: { orderBy: { createdAt: "desc" } }}
+    })
+
+    if (model.user_id !== userId) {
+        throw new Error("Unauthorized model access!")
+    }
     return model
 }
 
@@ -44,6 +57,7 @@ export {
     createModel,
     updateModel,
     getModelById,
+    getModelByIdSecure,
     getLatestTrainedModel,
     getModelsForCurrentUser,
 }
