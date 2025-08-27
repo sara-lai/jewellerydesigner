@@ -27,7 +27,7 @@ input.cl-emailField__input, input.cl-formFieldInput {
   outline: none;
   border: 3px solid transparent;
   border-radius: 6px !important;
-  border-image: linear-gradient(60deg, rgb(247, 149, 51), rgb(243, 112, 85), rgb(239, 78, 123), rgb(161, 102, 171), rgb(80, 115, 184), rgb(16, 152, 173), rgb(7, 179, 155), rgb(111, 186, 130)) 10;
+  border-image: linear-gradient(60deg, rgb(247, 149, 51), rgb(243, 112, 85), rgb(239, 78, 123), rgb(161, 102, 171), rgb(80, 115, 184), rgb(16, 152, 173), rgb(7, 179, 155), rgb(111, 186, 130)) 10 !important;
   border-image-slice: 15;
   background-clip: padding-box;
 }
@@ -44,12 +44,13 @@ input.cl-formFieldInput__emailAddress::placeholder {
   color: white;
   border: none;
   border-radius: 6px;
-  font-size: 14px;
+  font-size: 15px;
   cursor: pointer;
   transition: background-position 0.5s;
   background-size: 200% 100%;
   box-shadow: none !important;
   height: 44px;
+  font-weight: 700;
 }
 .cl-formButtonPrimary:hover {
   background-position: 100% 0;
@@ -61,4 +62,65 @@ input.cl-formFieldInput__emailAddress::placeholder {
   background: #f9fafb;
   border: none !important;
   box-shadow: none !important;
+}
+.cl-socialButtonsBlockButtonText {
+  font-size: 15px;
+}
+
+/* copying from p2, and v0 help */
+.landing-title span {
+  background: linear-gradient(
+    45deg, 
+    rgb(247, 149, 51), 
+    rgb(243, 112, 85), 
+    rgb(239, 78, 123), 
+    rgb(161, 102, 171), 
+    rgb(80, 115, 184), 
+    rgb(16, 152, 173), 
+    rgb(7, 179, 155), 
+    rgb(111, 186, 130),
+    rgb(247, 149, 51)
+  );
+  background-size: 400% 400%;
+  background-clip: text;
+  -webkit-background-clip: text;
+  color: transparent;
+  -webkit-text-fill-color: transparent;
+  animation: gradient-shift 4s ease infinite;
+  font-size: 28px;
+  line-height: 60px;  
+  font-weight: 800;  
+}
+@keyframes gradient-shift {
+  0% {
+    background-position: 0% 50%;
+  }
+  25% {
+    background-position: 100% 0%;
+  }
+  50% {
+    background-position: 100% 100%;
+  }
+  75% {
+    background-position: 0% 100%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+.landing-hero .bullet-point {
+  letter-spacing: .4px;
+  font-size: 1.1rem;
+  color: rgb(35, 47, 70);
+}
+
+.top-nav {
+    height: 80px;
+    width: 100%;
+    background: white;
+    padding: 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
 }
