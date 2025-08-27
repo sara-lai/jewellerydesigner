@@ -61,7 +61,7 @@ const Dashboard = ({ latestModel, allModels }) => {
         // filter out of DELETED, then copy to main list
         let theUnDeleted = deleted.find(photo => photo.id === photoId)    
 
-        // tmp solution, need to manually set deleted = false (since not synced with DB - todo)
+        // update FE because not immediately synced with BE
         theUnDeleted = { ...theUnDeleted, deleted: false }
         setMainPhotos([theUnDeleted, ...mainPhotos])
 
@@ -70,19 +70,26 @@ const Dashboard = ({ latestModel, allModels }) => {
     }
 
     function addToFavouritesList(photoId){
-        console.log('addToFavouritesList', photoId)
         let newFavourited = mainPhotos.find(photo => photo.id === photoId)
-        console.log('theobj', newFavourited)
 
-        // similar to db situation, tmp solution until sync with db properly - todo
+        // update FE because not immediately synced with BE
         newFavourited = { ...newFavourited, favourited: true}
-
         setFavourites([newFavourited, ...favourites])
+
+        // also update mainPhotos so icon changes
+        const newMain = mainPhotos.map(photo => photo.id === photoId ? newFavourited : photo)
+        setMainPhotos(newMain)
     }
 
     function removeFromFavouritesList(photoId){
         const newFavourites = favourites.filter(photo => photo.id !== photoId)
         setFavourites(newFavourites)
+
+        // update FE because not immediately synced with BE
+        let unFavourited = mainPhotos.find(photo => photo.id === photoId)
+        unFavourited = { ...unFavourited, favourited: false}
+        const newMain = mainPhotos.map(photo => photo.id === photoId ? unFavourited : photo)
+        setMainPhotos(newMain)
     }
 
     function removeFromDeleted(photoId){

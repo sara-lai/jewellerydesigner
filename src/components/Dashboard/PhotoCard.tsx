@@ -3,6 +3,7 @@ import { useState } from "react"
 import { Image, Box, Button, Flex, Text } from "@chakra-ui/react"
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faTrashCan, faHeart } from '@fortawesome/free-regular-svg-icons'
+import { faHeart as faHeartSolid } from '@fortawesome/free-solid-svg-icons'
 import { FiDownload, FiMaximize2 } from 'react-icons/fi'
 import '@/app/dashboard/dashboard.css'
 import { softDeletePhoto, deletePhoto } from '@/app/actions/deletePhoto'
@@ -17,12 +18,11 @@ const PhotoCard = ({ aiphoto, removeFromMainList, addToFavouritesList, removeFro
     // todo - realising i can have simpler logic.... (i have aiphoto already)
     // oh dear, refactor
 
-    function handleDelete(photoId){
-        if (aiphoto.favourited){
-            console.log('deleting a favourite? wont do')
-            return
-        }
+    function useHeartIcon(){
+        return aiphoto.favourited ? faHeartSolid : faHeart
+    }
 
+    function handleDelete(photoId){
         softDeletePhoto(photoId)
         removeFromMainList(photoId)
     }
@@ -46,8 +46,8 @@ const PhotoCard = ({ aiphoto, removeFromMainList, addToFavouritesList, removeFro
                 <Box position='absolute' h='100%' w='100%' p={4} bg='rgba(0,0,0,0.4)' zIndex='1' cursor='pointer'>
                     <Box>
                         <Flex justify='space-between'>
-                            <FontAwesomeIcon color='white' icon={faTrashCan} size="2xl" style={{ maxHeight: '30px'}} onClick={() => handleDelete(aiphoto.id)} />                            
-                            <FontAwesomeIcon color='white' icon={faHeart} size="2xl" style={{ maxHeight: '30px'}} onClick={() => handleFavourite(aiphoto.id)}/>                        
+                            {!aiphoto.favourited && <FontAwesomeIcon color='white' icon={faTrashCan} size="2xl" style={{ maxHeight: '30px'}} onClick={() => handleDelete(aiphoto.id)} /> }                                 
+                            <FontAwesomeIcon color='white' icon={useHeartIcon()} size="2xl" style={{ maxHeight: '30px'}} onClick={() => handleFavourite(aiphoto.id)}/>                        
                         </Flex>
                         <Box mt='20%'>
                             <Flex justify='center' align='center' gap={6}>
