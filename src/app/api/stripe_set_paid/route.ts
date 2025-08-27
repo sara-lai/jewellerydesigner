@@ -33,11 +33,14 @@ export async function POST(req: Request) {
         console.log('hurray!! we have made it here in the stripe test!!')
         const session = event.data.object as Stripe.Checkout.Session
         const userId = session.client_reference_id! // the Clerk userId set on initial payment links
+        
         // todo retrieve a plan too
         const plan = 'default'
         
         const updatedUser = await userService.updatePlan(userId, plan)         
         console.log('updated User:', updatedUser)  
+
+        // todo - assign basic credits
 
     } else {
         console.log('other message from stripe, ignore')

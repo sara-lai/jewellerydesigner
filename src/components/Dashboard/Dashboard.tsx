@@ -1,7 +1,7 @@
 'use client'
 
 import { useState, useEffect, useRef } from 'react'
-import { Box, Card, Flex, Spinner, Text } from '@chakra-ui/react'
+import { Box, Flex, Text } from '@chakra-ui/react'
 import FeaturesPanel from './FeaturesPanel'
 import YourAIPhotos from './YourAIPhotos'
 import Favourites from './Favourites'
@@ -10,6 +10,7 @@ import PublicModels from './PublicModels'
 import TopBar from './TopBar'
 import getModelSecurely from '@/app/actions/getModelSecurely'
 import Pusher from 'pusher-js'
+import PhotoCardLoading from './PhotoCardLoading'
 
 import '@/app/dashboard/dashboard.css'
 
@@ -26,24 +27,13 @@ const Dashboard = ({ latestModel, allModels }) => {
     const favouritePhotos = currentModel.aiphotos.filter(photo => photo.favourited)
     const [favourites, setFavourites] = useState(favouritePhotos)
 
-    const pusherRef = useRef(null) // useRef to prevent lots of inits
+    const pusherRef = useRef(null) // useRef to prevent concurrent connections issue
 
     function setNewPhotoUI(numPhotos: number){
-        // argument is number of photos being generated/ number of cards to display
-
-        // todo - add counter - probably setInterval/ useEffect... new file probably
-        const PhotoCardSkeleton = () => (
-            <Card.Root minH='300px'minW='250px' boxShadow="md">
-                <Card.Body p={2}>
-                    <Flex justify='center' align='center' h='100%'>
-                        <Spinner size='xl' />
-                    </Flex>
-                </Card.Body>
-            </Card.Root>
-        )
+        // numPhotos is number of photos being generated/ number of cards to display
         const cards = []
         for (let i = 0; i < numPhotos; i++){
-            cards.push(<PhotoCardSkeleton key={i} />)
+            cards.push(<PhotoCardLoading key={i} />)
         }
         setLoadingCards(cards)
     }
@@ -100,7 +90,6 @@ const Dashboard = ({ latestModel, allModels }) => {
     async function updateStateOnModelChange(){
         // using server action to keep images in sync with db (pusher only updates states vars)
         // todo - loading skeletons.... ?
-
         const refreshedModel = await getModelSecurely(currentModel.id)  
         console.log('got refreshed model', refreshedModel)       
         setDeleted(refreshedModel.aiphotos.filter(photo => photo.deleted))
@@ -113,7 +102,7 @@ const Dashboard = ({ latestModel, allModels }) => {
     }, [currentModel])
 
     useEffect(() => {
-        if (!pusherRef.current) { // make sure pusher only 1 init
+        if (!pusherRef.current) { // make sure pusher only 1 init (from p3/ concurrent connections issue)
             pusherRef.current = new Pusher(process.env.NEXT_PUBLIC_PUSHER_KEY, { cluster: process.env.NEXT_PUBLIC_PUSHER_CLUSTER })
         }
         const pusher = pusherRef.current
