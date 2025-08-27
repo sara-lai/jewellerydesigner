@@ -4,7 +4,7 @@ import { useState } from 'react'
 import { createModel } from '@/app/actions/createModel'
 import { uploadWidget } from '@/utils/cloudinaryUpload'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faImages, faCheckCircle } from '@fortawesome/free-regular-svg-icons'
+import { faImages, faCheckCircle, faXmarkCircle } from '@fortawesome/free-regular-svg-icons'
 import { LuCircleCheck, LuCircleDashed } from "react-icons/lu"
 
 import '@/app/dashboard/dashboard.css' // should this live in app/components?
@@ -28,6 +28,11 @@ const NewModelForm = () => {
             console.log('problem, failed to create the model')
         }
     } 
+
+    const removeFromUploads = (imgUrl: string) => {
+        const newUrls = imageUrls.filter(url => url !== imgUrl)
+        setImageUrls(newUrls)
+    }
     
     const handleImageUpload = () => { 
         uploadWidget((secureUrlsList: string[]) => {
@@ -58,7 +63,7 @@ const NewModelForm = () => {
                                 <List.Indicator asChild color="green.500">
                                 <FontAwesomeIcon icon={faCheckCircle} />
                                 </List.Indicator>
-                                 <Text fontSize='15px'>Use angles that you eventually wish to generate</Text>
+                                 <Text fontSize='15px'>Use the same angles that you wish to generate</Text>
                             </Flex>
                         </List.Item>
                         <List.Item>
@@ -69,16 +74,16 @@ const NewModelForm = () => {
                                  <Text fontSize='15px'>Aim for a consistent overall style</Text>
                             </Flex>
                         </List.Item>
-                        </List.Root>  
-                        {!imageUrls && (
-                            <Box minH='120px'>
-                                <Text>sample images</Text>
-                            </Box>  
-                        )}            
+                        </List.Root>            
 
-                        <Flex gap={2} flexWrap="wrap">
+                        <Flex gap={2} flexWrap="wrap" mt={4}>
                             {imageUrls.map((url, i) => (
-                                <Image key={i} src={url} boxSize="140px" objectFit="cover" />
+                                <Box position='relative' m={2}>
+                                    <FontAwesomeIcon icon={faXmarkCircle} style={{ height: '14px', width: '14px', position: 'absolute', top: '2%', right: '2%', color: 'rgba(0,0,0,.7)', cursor: 'pointer' }} 
+                                        onClick={() => removeFromUploads(url)}
+                                    />
+                                    <Image key={i} src={url} boxSize="140px" objectFit="cover" />
+                                </Box>
                             ))}
                         </Flex>
                         <Flex align='center' onClick={handleImageUpload} cursor="pointer" gap={2} mt={4}>
