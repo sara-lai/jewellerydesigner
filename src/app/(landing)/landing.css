@@ -33,7 +33,9 @@ input.cl-emailField__input, input.cl-formFieldInput {
 }
 input.cl-formFieldInput__emailAddress::placeholder {
   color: #6b7280;
-  font-size: 14px;
+  font-size: 16px;
+  font-weight: 400;
+  text-align: center;
 }
 .cl-button__google {
     height: 44px;
@@ -68,7 +70,7 @@ input.cl-formFieldInput__emailAddress::placeholder {
 }
 
 /* copying from p2, and v0 help */
-.landing-title span {
+.landing-title span, .test-gradient {
   background: linear-gradient(
     45deg, 
     rgb(247, 149, 51), 
@@ -87,10 +89,16 @@ input.cl-formFieldInput__emailAddress::placeholder {
   color: transparent;
   -webkit-text-fill-color: transparent;
   animation: gradient-shift 4s ease infinite;
-  font-size: 28px;
+  font-size: 38px;
   line-height: 60px;  
   font-weight: 800;  
 }
+.landing-title span.smaller {
+  font-size: 1.2rem;
+  line-height: 20px;
+  font-weight: 800;
+}
+
 @keyframes gradient-shift {
   0% {
     background-position: 0% 50%;
@@ -115,12 +123,58 @@ input.cl-formFieldInput__emailAddress::placeholder {
   color: rgb(35, 47, 70);
 }
 
+.landing-hero .subtitle {
+  color:#445067;
+  font-size: 1.2rem;
+}
+
 .top-nav {
-    height: 80px;
+    height: 60px;
     width: 100%;
     background: white;
-    padding: 20px;
+    padding: 10px 30px 10px 30px;
     display: flex;
     justify-content: space-between;
     align-items: center;
+}
+
+/* v0 assistance */
+.sun-gradient {
+  position: absolute;
+  top: -250px;
+  left: -250px;
+  width: 520px;
+  height: 520px;
+  background: radial-gradient(
+    circle at center,
+    rgb(80, 115, 184), 
+    rgb(16, 152, 173), 
+    rgb(7, 179, 155), 
+    rgb(111, 186, 130),    
+    rgb(239, 78, 123),
+    rgb(239, 78, 123),
+    rgb(243, 112, 85),
+    rgb(247, 149, 51),
+    transparent 70%
+  );
+  animation: sun-glow 3s ease-in-out infinite;
+  pointer-events: none;
+}
+@keyframes sun-glow {
+  0% {
+    opacity: 0.8;
+    filter: brightness(1) saturate(1);
+  }
+  33% {
+    opacity: 0.9;
+    filter: brightness(1.1) saturate(1.2);
+  }
+  66% {
+    opacity: 0.85;
+    filter: brightness(0.95) saturate(1.1);
+  }
+  100% {
+    opacity: 0.8;
+    filter: brightness(1) saturate(1);
+  }
 }
