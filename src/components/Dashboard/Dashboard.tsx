@@ -38,7 +38,7 @@ const Dashboard = ({ latestModel, allModels }) => {
         setLoadingCards(cards)
     }
 
-    function removeFromMainList(photoId){
+    function removeFromMainList(photoId: number){
         const newMainPhotos = mainPhotos.filter(photo => photo.id !== photoId)        
         setMainPhotos(newMainPhotos)
 
@@ -47,7 +47,7 @@ const Dashboard = ({ latestModel, allModels }) => {
         setDeleted([...deleted, newlyDeleted])
     }
 
-    function addToMainListUnDelete(photoId){
+    function addToMainListUnDelete(photoId: number){
         // filter out of DELETED, then copy to main list
         let theUnDeleted = deleted.find(photo => photo.id === photoId)    
 
@@ -59,7 +59,7 @@ const Dashboard = ({ latestModel, allModels }) => {
         removeFromDeleted(photoId)
     }
 
-    function addToFavouritesList(photoId){
+    function addToFavouritesList(photoId: number){
         let newFavourited = mainPhotos.find(photo => photo.id === photoId)
 
         // update FE because not immediately synced with BE
@@ -71,7 +71,7 @@ const Dashboard = ({ latestModel, allModels }) => {
         setMainPhotos(newMain)
     }
 
-    function removeFromFavouritesList(photoId){
+    function removeFromFavouritesList(photoId: number){
         const newFavourites = favourites.filter(photo => photo.id !== photoId)
         setFavourites(newFavourites)
 
@@ -82,7 +82,7 @@ const Dashboard = ({ latestModel, allModels }) => {
         setMainPhotos(newMain)
     }
 
-    function removeFromDeleted(photoId){
+    function removeFromDeleted(photoId: number){
         const newDeleted = deleted.filter(photo => photo.id !== photoId)
         setDeleted(newDeleted)
     }
@@ -125,7 +125,7 @@ const Dashboard = ({ latestModel, allModels }) => {
                     setCurrentModel={setCurrentModel} isDisabled={isDisabled} setIsDisabled={setIsDisabled} 
                 />
             </Box>
-            <Box flex="1" overflowY="auto" className="content-scroll" mb={20} pr={2}>  
+            <Box flex="1" overflowY="auto" className="content-scroll" mb={4} pr={2}>  
                 <Box position="sticky" top={0} zIndex={10} bg='white'>
                     <TopBar />
 
@@ -153,7 +153,7 @@ const Dashboard = ({ latestModel, allModels }) => {
                     </Flex>                    
                 </Box>
                 <Box mx="auto">
-                    {tab === 'all' && <YourAIPhotos loadingCards={loadingCards} photos={mainPhotos} removeFromMainList={removeFromMainList} addToFavouritesList={addToFavouritesList} />}
+                    {tab === 'all' && <YourAIPhotos loadingCards={loadingCards} photos={mainPhotos} removeFromMainList={removeFromMainList} addToFavouritesList={addToFavouritesList} removeFromFavouritesList={removeFromFavouritesList} />}
                     {tab === 'favourites' && <Favourites photos={favourites} removeFromFavouritesList={removeFromFavouritesList} />}
                     {tab === 'deleted' && <Deleted photos={deleted} removeFromDeleted={removeFromDeleted} addToMainListUnDelete={addToMainListUnDelete} />}
                     {tab ==='public' && <PublicModels />}
