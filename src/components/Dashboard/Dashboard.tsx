@@ -14,12 +14,13 @@ import PhotoCardLoading from './PhotoCardLoading'
 
 import '@/app/dashboard/dashboard.css'
 
-const Dashboard = ({ latestModel, allModels }) => {
+const Dashboard = ({ latestModel, allModels, currentUser }) => {
     const [currentModel, setCurrentModel] = useState({...latestModel})
     const [loadingCards, setLoadingCards] = useState([])
     const [tab, setTab] = useState('all')
     const [isDisabled, setIsDisabled] = useState(false) // previously in FeaturesPanel (to control form)
-    const [mainPhotos, setMainPhotos] = useState(currentModel.aiphotos)    
+    const [mainPhotos, setMainPhotos] = useState(currentModel.aiphotos)   
+    const [numCredits, setNumCredits] = useState(currentUser.credits) 
 
     const deletedPhotos = currentModel.aiphotos.filter(photo => photo.deleted)
     const [deleted, setDeleted] = useState(deletedPhotos)
@@ -122,12 +123,12 @@ const Dashboard = ({ latestModel, allModels }) => {
         <Flex className='dashboard-container' mx="auto" h="100vh">
             <Box width="380px" pt={0}>  
                 <FeaturesPanel setNewPhotoUI={setNewPhotoUI} allModels={allModels} currentModel={currentModel} 
-                    setCurrentModel={setCurrentModel} isDisabled={isDisabled} setIsDisabled={setIsDisabled} 
+                    setCurrentModel={setCurrentModel} isDisabled={isDisabled} setIsDisabled={setIsDisabled} setNumCredits={setNumCredits} 
                 />
             </Box>
             <Box flex="1" overflowY="auto" className="content-scroll" mb={4} pr={2}>  
                 <Box position="sticky" top={0} zIndex={10} bg='white'>
-                    <TopBar />
+                    <TopBar numCredits={numCredits}/>
 
                     <Flex justify='space-evenly' pt={3} borderBottom='1px solid rgba(0,0,0,.1)'>
                         <Box cursor='pointer' className={tab === 'public' ? 'active tab' : 'tab'} onClick={()=> setTab('public')}>

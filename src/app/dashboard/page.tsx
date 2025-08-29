@@ -39,7 +39,7 @@ const DashboardPage = async () => {
             </Flex>
           </>
         ) : (
-          <Dashboard latestModel={latestModel} allModels={allModels} />
+          <Dashboard latestModel={latestModel} allModels={allModels} currentUser={currentUser} />
         )}
       </>
     )

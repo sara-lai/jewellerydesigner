@@ -4,6 +4,7 @@ import { NextResponse } from 'next/server';
 import { validateWebhook } from 'replicate';
 import * as modelService from '@/services/modelService'
 import * as aiPhotoService from '@/services/aiPhotoService'
+import * as userService from '@/services/userService'
 
 import Pusher from 'pusher'
 const pusher = new Pusher({
@@ -59,8 +60,8 @@ export async function POST(request: Request) {
             pusher.trigger(`new-image-${model.id}`, 'new-image', { photo: aiphoto })
         }
 
-        // more integration points.... possibly 
-        // e.g. credits....  a userService.minusCredits.... 
+        const updatedUser = await userService.updateCredits(model.user_id, -newUrls.length)  
+        console.log('credits updated', updatedUser) 
 
     } else {
         console.log('model img sample generation unexpected status.... better do something')

@@ -1,15 +1,14 @@
 'use client'
-// a LOT of possible features here 
+
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { Box, Flex, Text, Heading, Button, Textarea, Span } from '@chakra-ui/react'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faFolderOpen, faCamera } from '@fortawesome/free-regular-svg-icons'
-import { FiSettings, FiShuffle, FiTerminal } from 'react-icons/fi'
-import { takePhotoWithModel } from '@/lib/replicate'
+import { FiSettings, FiTerminal } from 'react-icons/fi'
 import runNewImages from '@/app/actions/runNewImages'
 
-const FeaturesPanel = ({ allModels, currentModel, setCurrentModel, setNewPhotoUI, isDisabled, setIsDisabled }) => {
+const FeaturesPanel = ({ allModels, currentModel, setCurrentModel, setNewPhotoUI, isDisabled, setIsDisabled, setNumCredits }) => {
     const router = useRouter()
     const [prompt, setPrompt] = useState("")
 
@@ -25,7 +24,7 @@ const FeaturesPanel = ({ allModels, currentModel, setCurrentModel, setNewPhotoUI
 
         // 2 major things: 
         // 1) kick off back end / api stuff (pass prompt in)
-        // 2) set loading cards on Dashboard
+        // 2) set loading cards on Dashboard & set credits UI too
         setNewPhotoUI(2) // hardcoding 2 for now
 
         runNewImages(currentModel.id, 2, prompt)
@@ -33,6 +32,8 @@ const FeaturesPanel = ({ allModels, currentModel, setCurrentModel, setNewPhotoUI
         // disable button & clear prompt
         setIsDisabled(true)
         setPrompt("")
+
+        setNumCredits(prev => prev-2) // just UI for now; back end sync with webhook
     }
 
     return (

@@ -15,6 +15,7 @@ model User {
   clerk_id      String   @unique
   hasPlan       Boolean  @default(false)
   plan          String?  @default("hobby")
+  credits       Int?     @default(0)
   hasFirstModel Boolean  @default(false)
   createdAt     DateTime @default(now())
   updatedAt     DateTime @updatedAt

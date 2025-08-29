@@ -1,6 +1,10 @@
 import { useState, useEffect } from "react"
 import { Card, Flex, Spinner, Text } from '@chakra-ui/react'
 
+// bugs possibly to fix:
+// if loading cards active -> seems to break if you change tabs/models in app and return
+// they will also appear in wrong tab if change tabs, and wont update with images (timer will go on forever)
+
 const PhotoCardLoading = () => {
     const [timer, setTimer] = useState(0)
 

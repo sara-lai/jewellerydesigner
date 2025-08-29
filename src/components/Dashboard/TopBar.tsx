@@ -3,7 +3,7 @@
 import { Box, Flex, Text, Button } from '@chakra-ui/react'
 import Link from 'next/link'
 
-const TopBar = () => {
+const TopBar = ({ numCredits }) => {
     return (
         <Flex justify="space-between" align="center" gap={4} p={2} borderBottom="1px solid rgba(0,0,0,.1)">
             <Link href="/dashboard">
@@ -14,7 +14,7 @@ const TopBar = () => {
             <Flex gap={4} align='center'>
             <Box>
                 <Text fontWeight='bold' color='pink.600' letterSpacing='-.3px'>
-                100 Credits
+                    {numCredits}
                 </Text>
             </Box>
             <Box>

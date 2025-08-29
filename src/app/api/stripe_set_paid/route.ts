@@ -37,7 +37,9 @@ export async function POST(req: Request) {
         // todo retrieve a plan too
         const plan = 'default'
         
-        const updatedUser = await userService.updatePlan(userId, plan)         
+        await userService.updatePlan(userId, plan) 
+        const defaultCredits = 100
+        const updatedUser = userService.updateCredits(userId, defaultCredits)      
         console.log('updated User:', updatedUser)  
 
         // todo - assign basic credits
