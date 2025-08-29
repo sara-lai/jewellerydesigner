@@ -1,9 +1,11 @@
-import { Flex, Text } from '@chakra-ui/react'
+import { Flex, Text, Heading } from '@chakra-ui/react'
 
 import * as modelService from '@/services/modelService'
 import * as userService from '@/services/userService'
 import * as aiPhotoService from '@/services/aiPhotoService'
 import Dashboard from '@/components/Dashboard/Dashboard'
+
+import "@/app/(landing)/landing.css" // "sun effect" on first visit only 
 
 // brainstorm
 // next.js have to get state into client components not here, will use a parent client component (Dashboard)
@@ -29,9 +31,13 @@ const DashboardPage = async () => {
     return (
       <>
         {firstVisit ? (
-          <Flex justify='center' align='center' height='80%'>
-            <Text>Your first model is training! Please come back in 20-30 minutes. We'll also send you an email.</Text>
-          </Flex>
+          <>
+            <div className="sun-gradient"></div>
+            <Flex direction='column' justify='center' align='center' height='80%'>
+              <Heading mb={4}>Your first model is training.</Heading> 
+              <Text>Please come back in 20-30 minutes. We'll also send an email when ready!</Text>
+            </Flex>
+          </>
         ) : (
           <Dashboard latestModel={latestModel} allModels={allModels} />
         )}
