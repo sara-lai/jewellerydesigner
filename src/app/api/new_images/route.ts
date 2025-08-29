@@ -55,7 +55,7 @@ export async function POST(request: Request) {
         for (let newUrl of newUrls) {
             const aiphoto = await aiPhotoService.createAIPhoto(model.id, model.user_id, newUrl)
             console.log('create photo & pusher', aiphoto)
-            pusher.trigger(`new-image-${model.id}`, 'new-image', { photo: aiphoto })
+            pusher.trigger(`new-image-${model.user_id}`, 'new-image', { photo: aiphoto })
         }
 
         const updatedUser = await userService.updateCredits(model.user_id, -newUrls.length)  

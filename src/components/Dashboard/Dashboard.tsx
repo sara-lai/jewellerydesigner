@@ -108,16 +108,20 @@ const Dashboard = ({ latestModel, allModels, currentUser }) => {
             pusherRef.current = new Pusher(process.env.NEXT_PUBLIC_PUSHER_KEY, { cluster: process.env.NEXT_PUBLIC_PUSHER_CLUSTER })
         }
         const pusher = pusherRef.current
-        const channel = pusher.subscribe(`new-image-${currentModel.id}`)        
+        const channel = pusher.subscribe(`new-image-${currentUser.clerk_id}`)        
         channel.bind('new-image', (data) => {
-            setMainPhotos(prev => [data.photo, ...prev]) // solution: without prev weird state issues (simultaneous pusher messages)
+            // make sure photos only appear with right model (similar case like setGeneratingModel)
+            console.log('photo model vs. current model', data.photo.modelId, currentModel.id)
+            if (data.photo.modelId === currentModel.id){
+                setMainPhotos(prev => [data.photo, ...prev]) // solution: without prev weird state issues (simultaneous pusher messages)
+            }
             setLoadingCards([]) // txodo - remove cards one at a time?
             setIsDisabled(false) // free-up form in FeaturesPanel
             setGeneratingModel({}) // stop loading cards weird case
         })
         return () => {    // clean up or can get duplicates
             channel.unbind('new-image')
-            pusher.unsubscribe(`new-image-${currentModel.id}`)
+            pusher.unsubscribe(`new-image-${currentUser.clerk_id}`)
         }        
     }, [currentModel])      
 
