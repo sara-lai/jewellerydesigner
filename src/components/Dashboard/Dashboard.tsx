@@ -21,6 +21,7 @@ const Dashboard = ({ latestModel, allModels, currentUser }) => {
     const [isDisabled, setIsDisabled] = useState(false) // previously in FeaturesPanel (to control form)
     const [mainPhotos, setMainPhotos] = useState(currentModel.aiphotos)   
     const [numCredits, setNumCredits] = useState(currentUser.credits) 
+    const [generatingModel, setGeneratingModel] = useState({...currentModel})
 
     const deletedPhotos = currentModel.aiphotos.filter(photo => photo.deleted)
     const [deleted, setDeleted] = useState(deletedPhotos)
@@ -110,8 +111,9 @@ const Dashboard = ({ latestModel, allModels, currentUser }) => {
         const channel = pusher.subscribe(`new-image-${currentModel.id}`)        
         channel.bind('new-image', (data) => {
             setMainPhotos(prev => [data.photo, ...prev]) // solution: without prev weird state issues (simultaneous pusher messages)
-            setLoadingCards([]) // todo - remove cards one at a time?
+            setLoadingCards([]) // txodo - remove cards one at a time?
             setIsDisabled(false) // free-up form in FeaturesPanel
+            setGeneratingModel({}) // stop loading cards weird case
         })
         return () => {    // clean up or can get duplicates
             channel.unbind('new-image')
@@ -124,6 +126,7 @@ const Dashboard = ({ latestModel, allModels, currentUser }) => {
             <Box width="380px" pt={0}>  
                 <FeaturesPanel setNewPhotoUI={setNewPhotoUI} allModels={allModels} currentModel={currentModel} 
                     setCurrentModel={setCurrentModel} isDisabled={isDisabled} setIsDisabled={setIsDisabled} setNumCredits={setNumCredits} 
+                    setGeneratingModel={setGeneratingModel}
                 />
             </Box>
             <Box flex="1" overflowY="auto" className="content-scroll" mb={4} pr={2}>  
@@ -154,7 +157,11 @@ const Dashboard = ({ latestModel, allModels, currentUser }) => {
                     </Flex>                    
                 </Box>
                 <Box mx="auto">
-                    {tab === 'all' && <YourAIPhotos loadingCards={loadingCards} photos={mainPhotos} removeFromMainList={removeFromMainList} addToFavouritesList={addToFavouritesList} removeFromFavouritesList={removeFromFavouritesList} />}
+                    {tab === 'all' && ( 
+                        <YourAIPhotos loadingCards={loadingCards} photos={mainPhotos} removeFromMainList={removeFromMainList} addToFavouritesList={addToFavouritesList} 
+                            removeFromFavouritesList={removeFromFavouritesList} generatingModel={generatingModel} currentModel={currentModel} 
+                        />
+                    )}
                     {tab === 'favourites' && <Favourites photos={favourites} removeFromFavouritesList={removeFromFavouritesList} />}
                     {tab === 'deleted' && <Deleted photos={deleted} removeFromDeleted={removeFromDeleted} addToMainListUnDelete={addToMainListUnDelete} />}
                     {tab ==='public' && <PublicModels />}

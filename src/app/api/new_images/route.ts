@@ -14,7 +14,6 @@ const pusher = new Pusher({
     cluster: process.env.PUSHER_CLUSTER,
 })
 
-
 export async function POST(request: Request) {
     // retreive the right model 
     const url = new URL(request.url) // the next way, nice
@@ -44,7 +43,6 @@ export async function POST(request: Request) {
 
     if (body.status ==='succeeded'){
 
-        
         let newUrls: string[];
         // note: this logic here because seems can give 1 url as strubg, or give array of multi urls (depends on how initiated)
         if (Array.isArray(body.output)){
@@ -67,6 +65,5 @@ export async function POST(request: Request) {
         console.log('model img sample generation unexpected status.... better do something')
     }
     
-
     return NextResponse.json({ detail: "all good" }, { status: 200 });
 }

@@ -8,7 +8,7 @@ import { faFolderOpen, faCamera } from '@fortawesome/free-regular-svg-icons'
 import { FiSettings, FiTerminal } from 'react-icons/fi'
 import runNewImages from '@/app/actions/runNewImages'
 
-const FeaturesPanel = ({ allModels, currentModel, setCurrentModel, setNewPhotoUI, isDisabled, setIsDisabled, setNumCredits }) => {
+const FeaturesPanel = ({ allModels, currentModel, setCurrentModel, setNewPhotoUI, isDisabled, setIsDisabled, setNumCredits, setGeneratingModel }) => {
     const router = useRouter()
     const [prompt, setPrompt] = useState("")
 
@@ -34,6 +34,8 @@ const FeaturesPanel = ({ allModels, currentModel, setCurrentModel, setNewPhotoUI
         setPrompt("")
 
         setNumCredits(prev => prev-2) // just UI for now; back end sync with webhook
+
+        setGeneratingModel({...currentModel}) // this is for bug fix (loading cards on other models)
     }
 
     return (
