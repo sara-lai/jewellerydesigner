@@ -5,12 +5,11 @@ import { Card, Flex, Spinner, Text } from '@chakra-ui/react'
 // .... better if remove loading cards one at time instead of all at once? 
 // timer issue when toggle tabs/models and return
 
-const PhotoCardLoading = () => {
+const PhotoCardLoading = ({ startTime }) => {
     const [timer, setTimer] = useState(0)
 
     useEffect(() => {
         // timer feature
-        const startTime = Date.now() // base time
         const interval = setInterval(() => {
             let elapsedTime = Date.now() - startTime // difference in ms
             elapsedTime = elapsedTime/1000 // convert to seconds
@@ -18,14 +17,14 @@ const PhotoCardLoading = () => {
         }, 50) // performance issues if too small?
 
         return () => clearInterval(interval) 
-    }, [])
+    }, [startTime])
 
     return (
         <Card.Root minH='300px'minW='250px' boxShadow="md">
             <Card.Body p={2}>
                 <Flex direction='column' justify='center' align='center' h='100%' gap={4}>
                     <Spinner size='xl' />
-                    <Text>{timer}</Text>
+                    <Text>{timer.toFixed(2)}</Text>
                 </Flex>
             </Card.Body>
         </Card.Root>

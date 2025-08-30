@@ -22,6 +22,7 @@ const Dashboard = ({ latestModel, allModels, currentUser }) => {
     const [mainPhotos, setMainPhotos] = useState(currentModel.aiphotos)   
     const [numCredits, setNumCredits] = useState(currentUser.credits) 
     const [generatingModel, setGeneratingModel] = useState({...currentModel})
+    const [startTime, setStartTime] = useState(null)
 
     const deletedPhotos = currentModel.aiphotos.filter(photo => photo.deleted)
     const [deleted, setDeleted] = useState(deletedPhotos)
@@ -33,9 +34,13 @@ const Dashboard = ({ latestModel, allModels, currentUser }) => {
 
     function setNewPhotoUI(numPhotos: number){
         // numPhotos is number of photos being generated/ number of cards to display
+        // special startTime handling so it doesnt break when tabs/model changes       
+        const newStartTime = Date.now()
+        setStartTime(newStartTime)        
+
         const cards = []
         for (let i = 0; i < numPhotos; i++){
-            cards.push(<PhotoCardLoading key={i} />)
+            cards.push(<PhotoCardLoading key={i} startTime={newStartTime} />) // the ?? condition is GPT suggestion, startTime will be "stale" the first call, so default to Date.now() 
         }
         setLoadingCards(cards)
     }

@@ -1,4 +1,4 @@
-// UI mostly created via https://v0.dev/
+// UI mostly created via https://v0.app/
 'use client'
 
 import { useRouter } from 'next/navigation'

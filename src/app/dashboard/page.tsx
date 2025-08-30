@@ -2,31 +2,26 @@ import { Flex, Text, Heading } from '@chakra-ui/react'
 
 import * as modelService from '@/services/modelService'
 import * as userService from '@/services/userService'
-import * as aiPhotoService from '@/services/aiPhotoService'
 import Dashboard from '@/components/Dashboard/Dashboard'
+// import * as aiPhotoService from '@/services/aiPhotoService'
 
 import "@/app/(landing)/landing.css" // "sun effect" on first visit only 
-
-// brainstorm
-// next.js have to get state into client components not here, will use a parent client component (Dashboard)
-// this file should pass initial data/state to that parent.... 
 
 const DashboardPage = async () => {
     const currentUser = await userService.currentUser()
 
-    // todo - need to sth prisma to include images with these calls
+    // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise/all
+    // todo - can make these calls in parallel... 
 
-    // always show latest Model output (make sure images are sorted by creation time....uhoh)
-    const latestModel = await modelService.getLatestTrainedModel(currentUser.clerk_id)
+    const latestModel = await modelService.getLatestTrainedModel(currentUser.clerk_id) // so page defaults to latest model
+
+    const allModels = await modelService.getModelsForCurrentUser(currentUser.clerk_id)
 
     // for first visit & hasnt finished training
-    const allModels = await modelService.getModelsForCurrentUser(currentUser.clerk_id)
-    const completedTraining = latestModel?.completedTraining
-    const firstVisit = allModels.length === 1 && !completedTraining
+    const firstVisit = allModels.length === 1 && latestModel?.completedTraining
 
-    // get images for current user (mainly for deleted & favourites)
-    // or do this on a per model basis?
-    await aiPhotoService.getPhotosForCurrentUser(currentUser.clerk_id)
+    // get all images for current user (vs doing it on a per model basis)
+    // await aiPhotoService.getPhotosForCurrentUser(currentUser.clerk_id) // skip for now
 
     return (
       <>
