@@ -1,7 +1,7 @@
 import prisma from '@/lib/prisma'
 import { uploadImgToS3 } from '@/lib/s3'
 
-const createAIPhoto = async (modelId: number, userId: string, imgUrl: string) => {
+const createAIPhoto = async (modelId: number, userId: string, imgUrl: string, prompt: string) => {
     // add s3 upload 
     // get url back from s3
     const s3Url = await uploadImgToS3(imgUrl)
@@ -11,6 +11,7 @@ const createAIPhoto = async (modelId: number, userId: string, imgUrl: string) =>
             modelId: modelId,
             user_id: userId, // clerk user id
             url: s3Url,
+            prompt: prompt
         }
     })    
     return newPhoto

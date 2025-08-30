@@ -57,6 +57,7 @@ model AIPhoto {
   model      MLModel? @relation(fields: [modelId], references: [id])
   favourited Boolean  @default(false)
   deleted    Boolean  @default(false) // will use as "soft delete"
+  prompt     String?
   createdAt  DateTime @default(now())
   updatedAt  DateTime @updatedAt
 }

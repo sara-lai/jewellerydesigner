@@ -3,7 +3,6 @@ import { Card, Flex, Spinner, Text } from '@chakra-ui/react'
 
 // bugs possibly to fix:
 // .... better if remove loading cards one at time instead of all at once? 
-// timer issue when toggle tabs/models and return
 
 const PhotoCardLoading = ({ startTime }) => {
     const [timer, setTimer] = useState(0)

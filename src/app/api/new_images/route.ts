@@ -34,7 +34,6 @@ export async function POST(request: Request) {
 
     // get info from response
     const body = await request.json();
-    console.log('body of webhook for sample generation', body);
     if (body.status === 'failed'){
         console.log('problem from replicate!!!', body.error)
     }
@@ -52,8 +51,8 @@ export async function POST(request: Request) {
             newUrls = [body.output]
         }
 
-        for (let newUrl of newUrls) {
-            const aiphoto = await aiPhotoService.createAIPhoto(model.id, model.user_id, newUrl)
+        for (let newUrl of newUrls) {            
+            const aiphoto = await aiPhotoService.createAIPhoto(model.id, model.user_id, newUrl, body.input?.prompt)
             console.log('create photo & pusher', aiphoto)
             pusher.trigger(`new-image-${model.user_id}`, 'new-image', { photo: aiphoto })
         }

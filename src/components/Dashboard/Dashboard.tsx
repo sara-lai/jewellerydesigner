@@ -23,6 +23,7 @@ const Dashboard = ({ latestModel, allModels, currentUser }) => {
     const [numCredits, setNumCredits] = useState(currentUser.credits) 
     const [generatingModel, setGeneratingModel] = useState({...currentModel})
     const [startTime, setStartTime] = useState(null)
+    const [savedPrompt, setSavedPrompt] = useState('')
 
     const deletedPhotos = currentModel.aiphotos.filter(photo => photo.deleted)
     const [deleted, setDeleted] = useState(deletedPhotos)
@@ -120,7 +121,9 @@ const Dashboard = ({ latestModel, allModels, currentUser }) => {
             if (data.photo.modelId === currentModel.id){
                 setMainPhotos(prev => [data.photo, ...prev]) // solution: without prev weird state issues (simultaneous pusher messages)
             }
-            setLoadingCards([]) // txodo - remove cards one at a time?
+
+            setLoadingCards(prev => prev.slice(0, prev.length-1)) // return copy of all but last (remove one by one)
+
             setIsDisabled(false) // free-up form in FeaturesPanel
             setGeneratingModel({}) // stop loading cards weird case
         })
@@ -135,7 +138,7 @@ const Dashboard = ({ latestModel, allModels, currentUser }) => {
             <Box width="380px" pt={0}>  
                 <FeaturesPanel setNewPhotoUI={setNewPhotoUI} allModels={allModels} currentModel={currentModel} 
                     setCurrentModel={setCurrentModel} isDisabled={isDisabled} setIsDisabled={setIsDisabled} setNumCredits={setNumCredits} 
-                    setGeneratingModel={setGeneratingModel}
+                    setGeneratingModel={setGeneratingModel} savedPrompt={savedPrompt}
                 />
             </Box>
             <Box flex="1" overflowY="auto" className="content-scroll" mb={4} pr={2}>  
@@ -168,10 +171,10 @@ const Dashboard = ({ latestModel, allModels, currentUser }) => {
                 <Box mx="auto">
                     {tab === 'all' && ( 
                         <YourAIPhotos loadingCards={loadingCards} photos={mainPhotos} removeFromMainList={removeFromMainList} addToFavouritesList={addToFavouritesList} 
-                            removeFromFavouritesList={removeFromFavouritesList} generatingModel={generatingModel} currentModel={currentModel} 
+                            removeFromFavouritesList={removeFromFavouritesList} generatingModel={generatingModel} currentModel={currentModel} setSavedPrompt={setSavedPrompt}
                         />
                     )}
-                    {tab === 'favourites' && <Favourites photos={favourites} removeFromFavouritesList={removeFromFavouritesList} />}
+                    {tab === 'favourites' && <Favourites photos={favourites} removeFromFavouritesList={removeFromFavouritesList} setSavedPrompt={setSavedPrompt} />}
                     {tab === 'deleted' && <Deleted photos={deleted} removeFromDeleted={removeFromDeleted} addToMainListUnDelete={addToMainListUnDelete} />}
                     {tab ==='public' && <PublicModels />}
                 </Box>

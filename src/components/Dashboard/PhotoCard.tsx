@@ -4,14 +4,14 @@ import { Image, Box, Button, Flex, Text } from "@chakra-ui/react"
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faTrashCan, faHeart } from '@fortawesome/free-regular-svg-icons'
 import { faHeart as faHeartSolid } from '@fortawesome/free-solid-svg-icons'
-import { FiDownload, FiMaximize2 } from 'react-icons/fi'
+import { FiDownload, FiMaximize2, FiEdit3 } from 'react-icons/fi'
 import '@/app/dashboard/dashboard.css'
 import { softDeletePhoto, deletePhoto } from '@/app/actions/deletePhoto'
 import { favouritePhoto, unFavouritePhoto } from "@/app/actions/favouritePhoto"
 import { CloseButton, Dialog, Portal } from "@chakra-ui/react"
 // discovering chakra v3 modals VERY different from v2s
 
-const PhotoCard = ({ aiphoto, removeFromMainList, addToFavouritesList, removeFromFavouritesList }) => {
+const PhotoCard = ({ aiphoto, removeFromMainList, addToFavouritesList, removeFromFavouritesList, setSavedPrompt }) => {
     const [showOverlay, setShowOverlay] = useState(false)
     const [open, setOpen] = useState(false) // modals
 
@@ -51,22 +51,28 @@ const PhotoCard = ({ aiphoto, removeFromMainList, addToFavouritesList, removeFro
                         </Flex>
                         <Box mt='20%'>
                             <Flex justify='center' align='center' gap={6}>
-                                <Flex direction='column'>
-                                    <Box onClick={() => setOpen(true)}>
-                                        <div className='icon-circle'>
-                                            <FiMaximize2 className='fi-icon-thicken' color="gray.700" size="1.5rem" />
-                                        </div>
-                                        <Text fontSize='.8rem' color='white'>view</Text>
-                                    </Box>
+                                <Flex direction='column' align='center' onClick={() => setOpen(true)}>
+                                    <div className='icon-circle'>
+                                        <FiMaximize2 className='fi-icon-thicken' color="gray.700" size="1.5rem" />
+                                    </div>
+                                    <Text fontSize='.8rem' color='white'>view</Text>
                                 </Flex>
-                                <Flex direction='column'>
+                                <Box>
                                     <a href={aiphoto.url} download target="_blank" rel="noopener noreferrer">
-                                        <div className='icon-circle'>
-                                            <FiDownload className='fi-icon-thicken' color="gray.700" size="1.5rem" />
-                                        </div>
-                                        <Text fontSize='.8rem' color='white'>download</Text>
+                                        <Flex direction='column' align='center'>
+                                            <div className='icon-circle'>
+                                                <FiDownload className='fi-icon-thicken' color="gray.700" size="1.5rem" />
+                                            </div>
+                                            <Text fontSize='.8rem' color='white'>download</Text>
+                                        </Flex>
                                     </a>
-                                </Flex>
+                                </Box>                                
+                                <Flex direction='column' align='center' onClick={() => setSavedPrompt(aiphoto.prompt)}>
+                                    <div className='icon-circle'>
+                                        <FiEdit3 className='fi-icon-thicken' color="gray.700" size="1.5rem" />
+                                    </div>
+                                    <Text fontSize='.8rem' color='white'>prompt</Text>
+                                </Flex>                                           
                             </Flex>
                         </Box>                        
                     </Box>

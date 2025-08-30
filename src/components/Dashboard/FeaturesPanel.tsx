@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import { Box, Flex, Text, Heading, Button, Textarea, Span } from '@chakra-ui/react'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
@@ -8,10 +8,10 @@ import { faFolderOpen, faCamera } from '@fortawesome/free-regular-svg-icons'
 import { FiSettings, FiTerminal } from 'react-icons/fi'
 import runNewImages from '@/app/actions/runNewImages'
 
-const FeaturesPanel = ({ allModels, currentModel, setCurrentModel, setNewPhotoUI, isDisabled, setIsDisabled, setNumCredits, setGeneratingModel }) => {
+const FeaturesPanel = ({ allModels, currentModel, setCurrentModel, setNewPhotoUI, isDisabled, setIsDisabled, setNumCredits, setGeneratingModel, savedPrompt }) => {
     const router = useRouter()
     const [prompt, setPrompt] = useState("")
-
+    
     function switchModel(modelId){
         const theModel = allModels.find(model => modelId === model.id)
         setCurrentModel(theModel)
@@ -37,6 +37,10 @@ const FeaturesPanel = ({ allModels, currentModel, setCurrentModel, setNewPhotoUI
 
         setGeneratingModel({...currentModel}) // this is for bug fix (loading cards on other models)
     }
+
+    useEffect(() => {
+        setPrompt(savedPrompt) 
+    }, [savedPrompt])    
 
     return (
         <Flex className='content-scroll' direction='column' gap={8} h='100vh' pt={6} pr={6} pl={6} borderRight='1px solid rgba(0,0,0,.1)'>
