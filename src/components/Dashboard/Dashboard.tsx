@@ -52,7 +52,7 @@ const Dashboard = ({ latestModel, allModels, currentUser }) => {
 
         // ah can add to deleted here as well (for deleted tab)
         const newlyDeleted = mainPhotos.find(photo => photo.id === photoId)
-        setDeleted([...deleted, newlyDeleted])
+        setDeleted([newlyDeleted, ...deleted])
     }
 
     function addToMainListUnDelete(photoId: number){
