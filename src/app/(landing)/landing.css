@@ -148,33 +148,36 @@ input.cl-formFieldInput__emailAddress::placeholder {
   background: radial-gradient(
     circle at center,
     rgb(80, 115, 184), 
+    rgb(80, 115, 184), 
     rgb(16, 152, 173), 
     rgb(7, 179, 155), 
-    rgb(111, 186, 130),    
+    rgb(111, 186, 130),  
+    rgb(180, 200, 90), /* test */
     rgb(239, 78, 123),
     rgb(239, 78, 123),
     rgb(243, 112, 85),
-    rgb(247, 149, 51),
+    /* rgb(247, 149, 51), */
+    rgb(255, 160, 122),  /* test */
     transparent 70%
   );
-  animation: sun-glow 3s ease-in-out infinite;
+  animation: sun-glow 4s ease-in-out infinite;
   pointer-events: none;
 }
 @keyframes sun-glow {
   0% {
-    opacity: 0.8;
+    opacity: 0.6;
     filter: brightness(1) saturate(1);
   }
   33% {
-    opacity: 0.9;
-    filter: brightness(1.1) saturate(1.2);
+    opacity: 0.95;
+    filter: brightness(1.1) saturate(1.6);
   }
   66% {
     opacity: 0.85;
     filter: brightness(0.95) saturate(1.1);
   }
   100% {
-    opacity: 0.8;
+    opacity: 0.6;
     filter: brightness(1) saturate(1);
   }
 }
