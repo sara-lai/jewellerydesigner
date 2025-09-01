@@ -32,8 +32,11 @@ export async function createModel(formData: FormData, imageUrls: string[]) {
 
     // train!!
     console.log('kicking off training! about to call....')
+    
     // hmmm should await before direct to dashboard??? probably not
-    replicate.trainFirstModel(model)
+    // ^ lack of await maybe vercel problem?
+
+    await replicate.trainFirstModel(model)
     console.log('replicate training has kicked off! new model updates')
     
     redirect('/dashboard')
