@@ -53,6 +53,7 @@ const trainFirstModel = async (model) => {
 }
 
 const newModelSamples = async (modelId: number) => {
+    console.log('running NewModelSamples!!')
     // brainstorm
     // this could take more than a few minutes..... prob need to send off request and do webhook
     // seems replicate returns imageUrls, download them or not?
