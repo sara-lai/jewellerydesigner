@@ -18,7 +18,7 @@ const DashboardPage = async () => {
     const allModels = await modelService.getModelsForCurrentUser(currentUser.clerk_id)
 
     // for first visit & hasnt finished training
-    const firstVisit = allModels.length === 1 && latestModel?.completedTraining
+    const firstVisit = allModels.length === 1 && !latestModel?.completedTraining
 
     // get all images for current user (vs doing it on a per model basis)
     // await aiPhotoService.getPhotosForCurrentUser(currentUser.clerk_id) // skip for now
