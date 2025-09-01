@@ -7,7 +7,7 @@ import { clerkMiddleware, createRouteMatcher } from '@clerk/nextjs/server';
 
 const isProtectedRoute = createRouteMatcher([
   '/dashboard(.*)', 
-  '/onboarding(.*)'
+  '/onboarding/plans' // testing prod issue after stripe redirect...
 ])
 
 export default clerkMiddleware(async (auth, req) => {

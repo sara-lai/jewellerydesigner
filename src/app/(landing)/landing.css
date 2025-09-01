@@ -56,6 +56,7 @@ input.cl-formFieldInput__emailAddress::placeholder {
 }
 .cl-formButtonPrimary:hover {
   background-position: 100% 0;
+  cursor: pointer;
 }
 .cl-card {
   display: flex;
@@ -67,6 +68,10 @@ input.cl-formFieldInput__emailAddress::placeholder {
 }
 .cl-socialButtonsBlockButtonText {
   font-size: 15px;
+}
+.cl-otpCodeFieldInputContainer input:focus {
+    border: none !important;
+    box-shadow: none !important;
 }
 
 /* copying from p2, and v0 help */
@@ -152,7 +157,7 @@ input.cl-formFieldInput__emailAddress::placeholder {
     rgb(16, 152, 173), 
     rgb(7, 179, 155), 
     rgb(111, 186, 130),  
-    rgb(180, 200, 90), /* test */
+    /* rgb(180, 200, 90), test */
     rgb(239, 78, 123),
     rgb(239, 78, 123),
     rgb(243, 112, 85),
