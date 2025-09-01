@@ -1,5 +1,5 @@
 'use client'
-import { Heading, Flex, Stack, Box, Text, Image, Button, VStack, Field, Textarea, Input, CheckboxCard, List, ListItem, ListIcon  } from '@chakra-ui/react'
+import { Heading, Flex, Box, Text, Image, Button, VStack, Field, Textarea, Input, CheckboxCard, List, Spinner } from '@chakra-ui/react'
 import { useState } from 'react'
 import { createModel } from '@/app/actions/createModel'
 import { uploadWidget } from '@/utils/cloudinaryUpload'
@@ -18,6 +18,7 @@ import '@/app/dashboard/dashboard.css' // should this live in app/components?
 const NewModelForm = () => {
 
     const [imageUrls, setImageUrls] = useState<string[]>([])
+    const [submitting, setSubmitting] = useState(false)
     
     // todo remove images from preview area, have them filter out the imageUrls.... 
 
@@ -43,7 +44,7 @@ const NewModelForm = () => {
 
     return (
         <Flex justify='center' m={8}>
-            <form action={handleSubmit}>
+            <form action={handleSubmit} className={submitting ? 'disabled-form' : ''}>
                 <VStack gap={6} align="stretch" maxW='740px'>
                     <Box mb={6}>
                         <Heading size='md' mb={4}>Upload 10-30 Images</Heading>                        
@@ -122,7 +123,8 @@ const NewModelForm = () => {
                     </Field.Root>                    
                     
                     <Flex justify='center' mt={4}>
-                        <Button className='btn-default' w="200px" fontSize='30px' type='submit'>Create Model</Button>
+                        <Button className='btn-default' w="200px" fontSize='30px' type='submit' disabled={submitting} onClick={() => setSubmitting(true)}>Create Model</Button>
+                        {submitting && <Spinner size='lg' ml={4} />}
                     </Flex>
                 </VStack>
             </form>

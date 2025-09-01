@@ -66,13 +66,15 @@ const PhotoCard = ({ aiphoto, removeFromMainList, addToFavouritesList, removeFro
                                             <Text fontSize='.8rem' color='white'>download</Text>
                                         </Flex>
                                     </a>
-                                </Box>                                
-                                <Flex direction='column' align='center' onClick={() => setSavedPrompt(aiphoto.prompt)}>
-                                    <div className='icon-circle'>
-                                        <FiEdit3 className='fi-icon-thicken' color="gray.700" size="1.5rem" />
-                                    </div>
-                                    <Text fontSize='.8rem' color='white'>prompt</Text>
-                                </Flex>                                           
+                                </Box>   
+                                {aiphoto.prompt && (                             
+                                    <Flex direction='column' align='center' onClick={() => setSavedPrompt(aiphoto.prompt)}>
+                                        <div className='icon-circle'>
+                                            <FiEdit3 className='fi-icon-thicken' color="gray.700" size="1.5rem" />
+                                        </div>
+                                        <Text fontSize='.8rem' color='white'>prompt</Text>
+                                    </Flex>   
+                                )}                                        
                             </Flex>
                         </Box>                        
                     </Box>

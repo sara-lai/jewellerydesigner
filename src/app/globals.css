@@ -93,3 +93,7 @@ button.btn-colors {
   box-shadow: none !important;
   height: 44px;
 }
+
+.disabled-form {
+  opacity: .5;
+}
