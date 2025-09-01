@@ -41,7 +41,8 @@ export async function POST(request: Request) {
         console.log('updated model after webhook!', updatedModel) 
 
         // run inference for user freebies
-        newModelSamples(model.id)        
+        // adding await to attempt fix on vercel, could be slow  (GPT also suggests background process or put in /api as alternative)
+        await newModelSamples(model.id)        
     } else {
         console.log('model training unexpected status.... better do something')
     }
