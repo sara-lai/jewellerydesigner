@@ -8,6 +8,7 @@ import zipAndUpload from '@/utils/zipAndUpload'
 const webhookBase = process.env.REPLICATE_WEBHOOK_BASE
 
 const trainFirstModel = async (model) => {
+    console.log('here at Train first model!!')
     // probably different logic for new training vs additional trainings
     // does it matter if pass in model vs model.id??
     

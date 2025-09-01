@@ -31,14 +31,18 @@ export default async function zipAndUpload(modelId: number, imageUrls: string[])
 
     console.log('done preparing the zip file! time to upload')
 
-    const bucketName =  process.env.AWS_BUCKET_NAME
+    const bucketName = process.env.AWS_BUCKET_NAME
     const fileName = path.basename(zipPath)
     const key = `training-zips/${fileName}`
     const fileStream = fs.createReadStream(zipPath)
-    const url = await uploadZipToS3(bucketName, key, fileStream)
 
-    console.log('got this far and no error?, uploading zip', url)
-    return url
+    try {
+        const url = await uploadZipToS3(bucketName, key, fileStream)
+        console.log('got this far and no error?, uploading zip', url)
+        return url
+    } catch (err) {
+        console.error("uploadZipToS3 failed", err)
+    }
 }
 
     // graveyard cloudinary
