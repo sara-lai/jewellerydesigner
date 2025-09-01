@@ -39,10 +39,8 @@ export async function POST(req: Request) {
         
         await userService.updatePlan(userId, plan) 
         const defaultCredits = 100
-        const updatedUser = userService.updateCredits(userId, defaultCredits)      
+        const updatedUser = await userService.updateCredits(userId, defaultCredits)      
         console.log('updated User:', updatedUser)  
-
-        // todo - assign basic credits
 
     } else {
         console.log('other message from stripe, ignore')
