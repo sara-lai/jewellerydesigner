@@ -40,16 +40,20 @@ const trainFirstModel = async (model) => {
 
     // need definite error checking here if problem on replicate .... check response.status?
 
-    const updatedModel = await modelService.updateModel(model.id, {
-        modelStatus: "TRAINING",
-        trainId: response.id,
-        destination: destination,
-        tword: tword,
-        baseModel: response.model,
-    })
-    console.log('updated model', updatedModel)   
-    
-    return updatedModel
+    // weird vercel issue, is prisma failing?
+    try {
+        const updatedModel = await modelService.updateModel(model.id, {
+            modelStatus: "TRAINING",
+            trainId: response.id,
+            destination: destination,
+            tword: tword,
+            baseModel: response.model,
+        })
+        console.log('updated model', updatedModel)   
+        return updatedModel
+    } catch (err) {
+        console.error('FAILED updating model', err)
+    }    
 }
 
 const newModelSamples = async (modelId: number) => {
