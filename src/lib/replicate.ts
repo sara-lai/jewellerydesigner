@@ -58,31 +58,31 @@ const trainFirstModel = async (model) => {
 
 const newModelSamples = async (modelId: number) => {
     console.log('running NewModelSamples!!')
-    // brainstorm
-    // this could take more than a few minutes..... prob need to send off request and do webhook
-    // seems replicate returns imageUrls, download them or not?
 
     const replicate = new Replicate({
         auth: process.env.REPLICATE_API_TOKEN,
     })
 
     const model = await modelService.getModelById(modelId)
+    console.log('the model before samples', model)
     
-    // kick off more replicate tasks, get alerted with webhooks
-    // not sure all test models support num_outputs
-    // multiple options? predictions.create ("background") vs. replicate.run (must wait for result)
+    //predictions.create ("background") vs. replicate.run (must wait for result)
     for (let i = 0; i < 8; i++) {
-        await replicate.predictions.create({
-            "version": model.modelHostId,
-            "input": { 
-                "prompt": process.env.PROMPT_TEST,
-                "num_outputs": 2,
-            },
-            "webhook": `${webhookBase}/api/new_model_first_samples?modelId=${modelId}`,
-            "webhook_events_filter": ["completed"]
-        })
+        try {
+            await replicate.predictions.create({
+                "version": model.modelHostId,
+                "input": { 
+                    "prompt": process.env.PROMPT_TEST,
+                    "num_outputs": 2,
+                },
+                "webhook": `${webhookBase}/api/new_model_first_samples?modelId=${modelId}`,
+                "webhook_events_filter": ["completed"]
+            })
+        } catch (err) {
+            console.error("prediction request failed", err)
+        }
     }
-    // // some models suppport num_outputs, but various maxes.... oh dear
+    // graveyard, other approach
     // await replicate.predictions.create({
     //     "num_outputs": 10,
     //     "version": model.modelHostId,
