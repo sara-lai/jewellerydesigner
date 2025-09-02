@@ -5,34 +5,25 @@ import { createModel } from '@/app/actions/createModel'
 import { uploadWidget } from '@/utils/cloudinaryUpload'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faImages, faCheckCircle, faXmarkCircle } from '@fortawesome/free-regular-svg-icons'
-import { LuCircleCheck, LuCircleDashed } from "react-icons/lu"
 
-import '@/app/dashboard/dashboard.css' // should this live in app/components?
-
-// brainstorm
-// find another image uploader that isnt the bulky cloudinary? use tmp for now
-// ^ https://chakra-ui.com/docs/components/file-upload is this better?
-// need question mark/tooltips or info dropdowns 
-// need to show samples of GOOD photso 
+import '@/app/dashboard/dashboard.css'
 
 const NewModelForm = () => {
-
     const [imageUrls, setImageUrls] = useState<string[]>([])
     const [submitting, setSubmitting] = useState(false)
 
-    const handleSubmit = async (formData: FormData) => {
-        // todo approaches for validation 
-        // from Front End Masters -> useActionState
-        // or skip action={} and get own formData = new FormData(event.target)
-        try {
-            if (imageUrls.length === 0 || !formData.get('name')){ // prevent the submission tmp
-                setSubmitting(false)
-                return
-            }
-            await createModel(formData, imageUrls)     
-        } catch (err){
-            console.log('problem, failed to create the model')
+    // GPT help trying both action={} vs. onSubmit={} approaches
+    const handleSubmit = async (event) => {
+        // todo, try useActionState w/ Next
+        event.preventDefault()
+        setSubmitting(true)
+        const formData = new FormData(event.currentTarget)
+
+        if (imageUrls.length === 0 || !formData.get('name')){
+            setSubmitting(false)
+            return
         }
+        await createModel(formData, imageUrls)     
     } 
 
     const removeFromUploads = (imgUrl: string) => {
@@ -49,7 +40,7 @@ const NewModelForm = () => {
 
     return (
         <Flex justify='center' m={8}>
-            <form action={handleSubmit} className={submitting ? 'disabled-form' : ''}>
+            <form onSubmit={handleSubmit} className={submitting ? 'disabled-form' : ''}>
                 <VStack gap={6} align="stretch" maxW='740px'>
                     <Box mb={6}>
                         <Heading size='md' mb={4}>Upload 10-30 Images</Heading>                        
@@ -84,11 +75,11 @@ const NewModelForm = () => {
 
                         <Flex gap={2} flexWrap="wrap" mt={4}>
                             {imageUrls.map((url, i) => (
-                                <Box position='relative' m={2}>
+                                <Box key={i} position='relative' m={2}>
                                     <FontAwesomeIcon icon={faXmarkCircle} style={{ height: '14px', width: '14px', position: 'absolute', top: '2%', right: '2%', color: 'rgba(0,0,0,.7)', cursor: 'pointer' }} 
                                         onClick={() => removeFromUploads(url)}
                                     />
-                                    <Image key={i} src={url} boxSize="140px" objectFit="cover" />
+                                    <Image src={url} boxSize="140px" objectFit="cover" />
                                 </Box>
                             ))}
                         </Flex>
@@ -128,7 +119,7 @@ const NewModelForm = () => {
                     </Field.Root>                    
                     
                     <Flex justify='center' mt={4}>
-                        <Button className='btn-default' w="200px" fontSize='30px' type='submit' disabled={submitting} onClick={() => setSubmitting(true)}>Create Model</Button>
+                        <Button className='btn-default' w="200px" fontSize='30px' type='submit' disabled={submitting}>Create Model</Button>
                         {submitting && <Spinner size='lg' ml={4} />}
                     </Flex>
                 </VStack>

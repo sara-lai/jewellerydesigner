@@ -18,7 +18,7 @@ const Dashboard = ({ latestModel, allModels, currentUser }) => {
     const [currentModel, setCurrentModel] = useState({...latestModel})
     const [loadingCards, setLoadingCards] = useState([])
     const [tab, setTab] = useState('all')
-    const [isDisabled, setIsDisabled] = useState(false) // previously in FeaturesPanel (to control form)
+    const [isDisabled, setIsDisabled] = useState(false) // control FeaturesPanel form
     const [mainPhotos, setMainPhotos] = useState(currentModel.aiphotos)   
     const [numCredits, setNumCredits] = useState(currentUser.credits) 
     const [generatingModel, setGeneratingModel] = useState({...currentModel})
@@ -34,36 +34,34 @@ const Dashboard = ({ latestModel, allModels, currentUser }) => {
     const pusherRef = useRef(null) // useRef to prevent concurrent connections issue
 
     function setNewPhotoUI(numPhotos: number){
-        // numPhotos is number of photos being generated/ number of cards to display
-        // special startTime handling so it doesnt break when tabs/model changes       
+        // special startTime handling (keeping state on parent) so doesnt break when tabs/model changes       
         const newStartTime = Date.now()
         setStartTime(newStartTime)        
 
         const cards = []
         for (let i = 0; i < numPhotos; i++){
-            cards.push(<PhotoCardLoading key={i} startTime={newStartTime} />) // the ?? condition is GPT suggestion, startTime will be "stale" the first call, so default to Date.now() 
+            cards.push(<PhotoCardLoading key={i} startTime={newStartTime} />)
         }
         setLoadingCards(cards)
     }
 
     function removeFromMainList(photoId: number){
+        // because deleted (update deleted too)
+
         const newMainPhotos = mainPhotos.filter(photo => photo.id !== photoId)        
         setMainPhotos(newMainPhotos)
 
-        // ah can add to deleted here as well (for deleted tab)
         const newlyDeleted = mainPhotos.find(photo => photo.id === photoId)
         setDeleted([newlyDeleted, ...deleted])
     }
 
     function addToMainListUnDelete(photoId: number){
-        // filter out of DELETED, then copy to main list
         let theUnDeleted = deleted.find(photo => photo.id === photoId)    
 
         // update FE because not immediately synced with BE
         theUnDeleted = { ...theUnDeleted, deleted: false }
         setMainPhotos([theUnDeleted, ...mainPhotos])
 
-        // finally removing from deleted list, can re-use
         removeFromDeleted(photoId)
     }
 
@@ -74,7 +72,7 @@ const Dashboard = ({ latestModel, allModels, currentUser }) => {
         newFavourited = { ...newFavourited, favourited: true}
         setFavourites([newFavourited, ...favourites])
 
-        // also update mainPhotos so icon changes
+        // update mainPhotos so icon changes
         const newMain = mainPhotos.map(photo => photo.id === photoId ? newFavourited : photo)
         setMainPhotos(newMain)
     }
@@ -86,6 +84,7 @@ const Dashboard = ({ latestModel, allModels, currentUser }) => {
         // update FE because not immediately synced with BE
         let unFavourited = mainPhotos.find(photo => photo.id === photoId)
         unFavourited = { ...unFavourited, favourited: false}
+
         const newMain = mainPhotos.map(photo => photo.id === photoId ? unFavourited : photo)
         setMainPhotos(newMain)
     }
@@ -95,39 +94,42 @@ const Dashboard = ({ latestModel, allModels, currentUser }) => {
         setDeleted(newDeleted)
     }
 
+    // summary 
+    // Next server action to refresh data from BE each time model changes (e.g. user navigates new model)
+    // solves problems (pusher syncing, or the above UI tmp setting of fields stuff)
     async function updateStateOnModelChange(){
-        // using server action to keep images in sync with db (pusher only updates states vars)
-        // todo - loading skeletons.... ?
         const refreshedModel = await getModelSecurely(currentModel.id)  
-        console.log('got refreshed model', refreshedModel)       
         setDeleted(refreshedModel.aiphotos.filter(photo => photo.deleted))
         setFavourites(refreshedModel.aiphotos.filter(photo => photo.favourited))
         setMainPhotos(refreshedModel.aiphotos)
     }
-
     useEffect(() => {
         updateStateOnModelChange()
     }, [currentModel])
 
+
+    // summary
+    // pusher real-time update
+    // p3 had issues with too many connections - useRef to be safe
+    // for now, binding channel to the user (instead of the generating model)
+    // ^ needs to match model from the pusher message (data.photo.modelId) & see if its the same as current selected model
+    // [currentModel] -> if they navigate around (change current model) then reset connection (or gets buggy)
     useEffect(() => {
-        if (!pusherRef.current) { // make sure pusher only 1 init (from p3/ concurrent connections issue)
+        if (!pusherRef.current) { 
             pusherRef.current = new Pusher(process.env.NEXT_PUBLIC_PUSHER_KEY, { cluster: process.env.NEXT_PUBLIC_PUSHER_CLUSTER })
         }
         const pusher = pusherRef.current
         const channel = pusher.subscribe(`new-image-${currentUser.clerk_id}`)        
         channel.bind('new-image', (data) => {
-            // make sure photos only appear with right model (similar case like setGeneratingModel)
-            console.log('photo model vs. current model', data.photo.modelId, currentModel.id)
             if (data.photo.modelId === currentModel.id){
-                setMainPhotos(prev => [data.photo, ...prev]) // solution: without prev weird state issues (simultaneous pusher messages)
+                setMainPhotos(prev => [data.photo, ...prev])
             }
+            setLoadingCards(prev => prev.slice(0, prev.length-1)) // remove cards one by one (not all at once)
 
-            setLoadingCards(prev => prev.slice(0, prev.length-1)) // return copy of all but last (remove one by one)
-
-            setIsDisabled(false) // free-up form in FeaturesPanel
+            setIsDisabled(false)
             setGeneratingModel({}) // stop loading cards weird case
         })
-        return () => {    // clean up or can get duplicates
+        return () => {    
             channel.unbind('new-image')
             pusher.unsubscribe(`new-image-${currentUser.clerk_id}`)
         }        

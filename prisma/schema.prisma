@@ -9,7 +9,6 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-// todo - maybe add reference with models for currentUser.mlmodels 
 model User {
   id            Int      @id @default(autoincrement())
   clerk_id      String   @unique
@@ -48,7 +47,6 @@ model MLModel {
   aiphotos          AIPhoto[]
 }
 
-// todo - maybe full reference with user too ? for "all photos"
 model AIPhoto {
   id         Int      @id @default(autoincrement())
   user_id    String // clerk user_id
