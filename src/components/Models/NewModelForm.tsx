@@ -19,11 +19,16 @@ const NewModelForm = () => {
 
     const [imageUrls, setImageUrls] = useState<string[]>([])
     const [submitting, setSubmitting] = useState(false)
-    
-    // todo remove images from preview area, have them filter out the imageUrls.... 
 
     const handleSubmit = async (formData: FormData) => {
+        // todo approaches for validation 
+        // from Front End Masters -> useActionState
+        // or skip action={} and get own formData = new FormData(event.target)
         try {
+            if (imageUrls.length === 0 || !formData.get('name')){ // prevent the submission tmp
+                setSubmitting(false)
+                return
+            }
             await createModel(formData, imageUrls)     
         } catch (err){
             console.log('problem, failed to create the model')
@@ -97,7 +102,7 @@ const NewModelForm = () => {
                         <Field.Label>
                             Model Name
                         </Field.Label>
-                        <Input name="name" placeholder="Enter model name" />
+                        <Input name="name" placeholder="Enter model name" required />
                         <Field.HelperText>Choose a name for your own reference, unique for each model</Field.HelperText>
                     </Field.Root>
 
@@ -109,7 +114,7 @@ const NewModelForm = () => {
 
                     <Field.Root>
                         <CheckboxCard.Root p={6} cursor='pointer'>
-                            <CheckboxCard.HiddenInput name="agreedToTerms"/>
+                            <CheckboxCard.HiddenInput name="agreedToTerms" required />
                             <CheckboxCard.Control>
                                 <CheckboxCard.Content>
                                 <CheckboxCard.Label>
